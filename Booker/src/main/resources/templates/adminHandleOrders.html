@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>adminHandleOrder</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<input type="hidden" th:value="${condition}">
+<div th:replace="~{bar::topbar}"></div>
+<input type="hidden" id="userId" th:value="${session.user.id}">
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri=${condition})"/>
+            <div style="clear: both">
+                <div>
+                    <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单号</span></div>
+                    <div style="float: left;width: 350px"><span style="font-size: 15px;font-weight: bold">收货地址</span></div>
+                    <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单金额</span></div>
+                    <div style="float: left;width: 300px"><span style="font-size: 15px;font-weight: bold">订单时间</span></div>
+                    <div style="float: left;width: 200px"><span style="font-size: 15px;font-weight: bold">操作</span></div>
+                </div>
+                <h1 th:if="${orders.size()==0}"><span class="badge badge-danger">暂无订单</span></h1>
+                <div style="width:100%;clear: both" data-toggle="collapse"th:href="@{#collapseExample}+${orderStat.index}" role="button" aria-expanded="false" aria-controls="collapseExample" th:each="order,orderStat:${orders}">
+                    <div style="width:130px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span  th:text="${order.id}"></span>
+                    </div>
+                    <div style="float: left;width:370px;font-size: 20px;word-wrap: break-word">
+                        <span style="padding-left: 20px" th:text="${order.addressDetail}">Mark</span>
+
+                    </div>
+
+                    <div style="width:150px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.summoney}">Otto</span>
+
+                    </div>
+
+                    <div style="width:300px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.datetime}">@mdo</span>
+
+                    </div>
+                    <div  style="width:200px;font-size: 20px;float: left;word-wrap: break-word">
+                        <button class="btn btn-danger sendOutBooks handleOrder" th:userId="${order.userId}" th:if="${condition=='待发货订单'}"   th:orderId="${order.id}">发货</button>
+                        <button class="btn btn-danger refundBooks handleOrder" th:userId="${order.userId}" th:if="${condition=='退款订单'}"  th:orderId="${order.id}">同意退款</button>
+                        <button class="btn btn-dark refuseRefundBooks handleOrder" th:userId="${order.userId}" th:if="${condition=='退款订单'}"  th:orderId="${order.id}">拒绝退款</button>
+                        <button class="btn btn-danger refundBooks handleOrder" th:userId="${order.userId}" th:if="${order.condition=='退货审核中'}"  th:orderId="${order.id}">同意退货</button>
+                        <button class="btn btn-dark refureRefundBooks handleOrder" th:userId="${order.userId}" th:if="${order.condition=='退货审核中'}"  th:orderId="${order.id}">拒绝退货</button>
+                        <button class="btn btn-dark sureReturnBooks handleOrder" th:userId="${order.userId}" th:if="${order.condition=='退货中'}"  th:orderId="${order.id}">确认收货</button>
+
+                    </div>
+                    <ul style="clear: both" class="nav nav-list">     <li class="divider"></li>    </ul>
+                    <div style="clear: both" class="collapse" th:id="collapseExample+${orderStat.index}">
+                        <table class="table table-dark">
+                            <thead>
+                            <tr>
+                                <th scope="col">订单明细号</th>
+                                <th scope="col">图书名字</th>
+                                <th scope="col">数量</th>
+                                <th scope="col">订单金额</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="orderDetail,orderDetailStat:${order.orderDetails}">
+                                <th scope="row" th:text="${orderDetail.id}">1</th>
+                                <td th:text="${orderDetail.book.title}">Mark</td>
+                                <td th:text="${orderDetail.booknum}">Otto</td>
+                                <td th:text="${orderDetail.summoney}">@mdo</td>
+                                <td><a class="btn btn-primary btn-sm" th:href="@{/book/bookDetail/}+${orderDetail.book.id}">图书详情</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    var userId=$("#userId").val();
+    $(document).on('click', '.handleOrder', function (){
+        var orderId = $(this).attr("orderId");
+        var orderUserId = $(this).attr("userId");
+        var way = $(this).text();
+        $.ajax({
+            url: '/admin/ajaxHandleOrder',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                way:way,
+                id:orderId,
+                adminId:userId,
+                userId:orderUserId,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                alert(data['info'])
+                location.reload();
+            },
+        })
+    })
+
+    $(document).on('click', '#submit', function () {
+        if ($("#condition").val() == "")
+
+        {
+
+            return false;
+        }
+        else {
+
+            $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+        }
+    })
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.Booker.generator.mapper.LoginMapper">
+    <resultMap id="BaseResultMap" type="com.dx.Booker.generator.po.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="love" jdbcType="VARCHAR" property="love" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="role" jdbcType="VARCHAR" property="role" />
+        <result column="sex" jdbcType="VARCHAR" property="sex" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, username, password, email, love, icon, role,sex
+  </sql>
+    <update id="updatePassword" parameterType="com.dx.Booker.generator.po.User">
+        update user
+        set
+        password = #{password,jdbcType=VARCHAR}
+        where
+        email = #{email,jdbcType=VARCHAR}
+    </update>
+    <select id="validate" resultType="com.dx.Booker.generator.po.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where email = #{email,jdbcType=VARCHAR}
+        and password = #{password,jdbcType=VARCHAR}
+    </select>
+    <select id="isRegister" resultType="com.dx.Booker.generator.po.User">
+        select
+        <include refid="Base_Column_List" />
+        from user
+        where email = #{email,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

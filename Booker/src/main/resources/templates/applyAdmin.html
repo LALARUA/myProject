@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>applyAdmin</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri='申请管理员成功')"/>
+            <h1><span class="badge badge-danger">牛逼！！你现在是管理员了！</span></h1>
+
+
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    $(document).on('click', '#submit', function () {
+        if ($("#condition").val() == "")
+
+        {
+
+            return false;
+        }
+        else {
+
+            $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+        }
+    })
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

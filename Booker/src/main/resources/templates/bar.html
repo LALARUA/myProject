@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>bar</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" th:fragment="topbar">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <img th:if="${session.user!=null}" th:src="${session.user.icon}" style="float: left;width: 50px;height: 50px" alt="..." class="rounded-circle">
+                <a th:if="${session.user!=null}" th:text="${session.user!=null}?${session.user.username}"
+                   class="nav-link dropdown-toggle" data-hover="dropdown" style="float:left;font-size: 17px" href="#"
+                   id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                </a>
+                <a th:if="${session.user==null}" class="nav-link" style="font-size: 23px" th:href="@{/}">
+                    登录
+                </a>
+                <div th:if="${session.user!=null}" class="dropdown-menu"
+                     style="color: black; border: 0px white;min-width:130px;background-color:#5A6268;padding: 0px"
+                     aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item btn"th:href="@{/user/myOrder/}">我的订单</a>
+                    <a th:href="@{/user/myCollect/}+${session.user.id}+'/'+0" class="dropdown-item btn">我的收藏</a>
+                    <a class="dropdown-item btn" th:href="@{/user/myCoupon/}+${session.user.id}">我的优惠券</a>
+                    <a class="dropdown-item btn "th:href="@{/user/myMessage}" >我的消息</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item btn" th:href="@{/user/myUser}">个人中心</a>
+                </div>
+            </li>
+
+        </ul>
+        <form class="form-inline" id="searchBooks" action="" style="width: 82%;">
+            <!--<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">-->
+            <input type="text" id="condition" class="form-control  w-75 form-control-dark" placeholder="书名、作者、标签或者ISBN"
+                   aria-label="Search">
+            <button type="submit" id="submit" style="font-size: 22px" class="btn w-25 btn-secondary">Search</button>
+        </form>
+
+    </div>
+
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+            <a class="nav-link" th:href="@{/signout}">Sign out</a>
+        </li>
+    </ul>
+</nav>
+<div id="myuserbar"
+     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2" th:text="${activeUri}">个人中心</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a th:if="${session.user.role=='admin'}" th:href="@{/admin/homepage}" type="button" class="btn btn-outline-warning">管理员操作</a>
+            <a th:if="${session.user.role=='user'}" th:href="@{/user/applyAdmin}" type="button" class="btn btn-outline-warning">申请为管理员</a>
+
+            <a th:href="@{/user/myCollect/}+${session.user.id}+'/'+0" type="button" class="btn btn-outline-primary">我的收藏</a>
+            <a th:href="@{/user/myOrder}" type="button" class="btn btn-outline-info">我的订单</a>
+            <a th:href="@{/user/myMessage}" type="button" class="btn btn-outline-danger">我的消息</a>
+            <a th:href="@{/user/myCoupon/}+${session.user.id}" type="button" class="btn btn-outline-warning">我的优惠券</a>
+            <!--<button type="button" class="btn btn-outline-light">Light</button>-->
+            <!--<button type="button" class="btn btn-outline-dark">Dark</button>-->
+        </div>
+        <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+            <span data-feather="calendar"></span>
+            购物车
+        </a>
+    </div>
+</div>
+<div id="adminbar"
+     class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2" th:text="${activeUri}"></h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <a th:href="@{/admin/handleTagsPage}" style="color: black" type="button" class="btn btn-outline-light">管理标签</a>
+            <a th:href="@{/admin/addBookPage}" type="button" class="btn btn-outline-primary">添加Book</a>
+            <a type="button" th:href="@{/admin/book/0/0/id}" class="btn btn-outline-warning">查找Book</a>
+            <a type="button" th:href="@{/admin/handleOrders/sendOutBooks}" class="btn btn-outline-info">待发货订单</a>
+            <a th:href="@{/admin/handleOrders/refundOrders}" type="button" class="btn btn-outline-danger">退款订单</a>
+            <a th:href="@{/admin/handleOrders/returnOrders}" type="button" class="btn btn-outline-dark">退货订单</a>
+
+
+
+            <!--<button type="button" class="btn btn-outline-light">Light</button>-->
+            <!--<button type="button" class="btn btn-outline-dark">Dark</button>-->
+        </div>
+        <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+            <span data-feather="calendar"></span>
+            购物车
+        </a>
+    </div>
+</div>
+<nav class="col-md-2 d-none d-md-block bg-light sidebar" id="sidebar">
+    <div class="sidebar-sticky">
+        <div class="panel-group" id="accordion">
+
+        </div>
+        <ul class="nav flex-column">
+
+            <li class="nav-item">
+                <a class="nav-link active" href="#" th:href="@{/homepage}"
+                   th:class="${activeUri}=='main'?'nav-link active':'nav-link'"/>
+                <h5><span data-feather="home"></span>
+                    主页 <span class="sr-only">(current)</span></h5>
+                </a>
+            </li>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <h5><span class="badge badge-primary">
+                     <span data-feather="tag"></span>标签分类</span></h5>
+            </h6>
+            <li class="nav-item" th:each="label,labelStat:${session.labels}">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">
+                            <a class="nav-link" data-toggle="collapse" data-parent="#accordion"
+                               th:href="'#'+${label.name}">
+                                <span data-feather="book"></span>
+                                <span th:text="${label.name}"></span>
+                            </a>
+                        </h5>
+                    </div>
+                    <div th:id="${label.name}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <a th:class="${keyWord==tag.name}?'nav-link active':'nav-link'"
+                               th:href="@{/book/findBooks/ByTag/}+${tag.name}+'/id'" th:each="tag,tagStat:${label.tags}">
+                                <span th:text="${tag.name}"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
+        </ul>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+            <h5><span class="badge badge-danger">
+                 <span data-feather="type"></span>热门类别</span></h5>
+        </h6>
+        <ul class="nav flex-column mb-2">
+
+            <li th:each="hotTag,hotTagStat:${session.hotTags}" class="nav-item">
+                <a th:text="${hotTag.name}" th:class="${keyWord}==hotTag.name?'nav-link active':'nav-link'" th:href="@{/book/findBooks/ByTag/}+${hotTag.name}+'/id'">
+                    <!--<svg class="icon" aria-hidden="true">-->
+                        <!--<use xlink:href="#icon-zhentanjianying"></use>-->
+                    <!--</svg>-->
+                    东野圭吾
+                </a>
+            </li>
+
+
+
+        </ul>
+    </div>
+</nav>
+</body>
+
+
+</html>

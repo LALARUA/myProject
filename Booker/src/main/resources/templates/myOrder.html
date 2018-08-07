@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myCart</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <!-- Custom styles for this template -->
+
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#myuserbar(activeUri='我的订单')"/>
+            <div style="clear: both">
+                <div>
+                    <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单号</span></div>
+                    <div style="float: left;width: 350px"><span style="font-size: 15px;font-weight: bold">收货地址</span></div>
+                    <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单金额</span></div>
+                    <div style="float: left;width: 280px"><span style="font-size: 15px;font-weight: bold">订单时间</span></div>
+                    <div style="float: left;width: 220px"><span style="font-size: 15px;font-weight: bold">订单状态</span></div>
+                </div>
+                <h1 th:if="${orders.size()==0}"><span class="badge badge-danger">暂无订单</span></h1>
+                <h4 th:if="${orders.size()!=0}"><span class="badge badge-danger">点击订单查看订单明细</span></h4>
+                <!--<tr>-->
+                <!--<th scope="col">订单号</th>-->
+                <!--<th scope="col">收货地址</th>-->
+                <!--<th scope="col">订单金额</th>-->
+                <!--<th scope="col">订单时间</th>-->
+                <!--<th scope="col">订单状态</th>-->
+                <!--</tr>-->
+
+
+                <div style="width:100%;clear: both" data-toggle="collapse"th:href="@{#collapseExample}+${orderStat.index}" role="button" aria-expanded="false" aria-controls="collapseExample" th:each="order,orderStat:${orders}">
+                    <div style="width:130px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span  th:text="${order.id}"></span>
+                    </div>
+                    <div style="float: left;width:370px;font-size: 20px;word-wrap: break-word">
+                        <span style="padding-left: 20px" th:text="${order.addressDetail}">Mark</span>
+
+                    </div>
+                    <div style="width:150px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.summoney}">Otto</span>
+
+                    </div>
+
+                    <div style="width:280px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.datetime}">@mdo</span>
+
+                    </div>
+                    <div  style="width:220px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span class="condition" th:text="${order.condition}">@twitter</span>
+                        <button th:if="${order.condition=='支付成功'}" th:orderId="${order.id}" class="btn-sm btn btn-dark refundOrder handleOrder">申请退款</button>
+                        <button th:if="${order.condition=='已发货'}" th:orderId="${order.id}" class="sureOrder btn-sm btn btn-success handleOrder">确认收货</button>
+                        <button th:if="${order.condition=='已发货'}" th:orderId="${order.id}" class=" btn-sm btn btn-warning handleOrder">申请退货</button>
+                        <button th:if="${order.condition=='同意退货'}" th:orderId="${order.id}" class=" btn-sm btn btn-warning handleOrder">退货发送</button>
+                    </div>
+                            <ul style="clear: both" class="nav nav-list">     <li class="divider"></li>    </ul>
+                        <div style="clear: both" class="collapse" th:id="collapseExample+${orderStat.index}">
+                            <table class="table table-dark">
+                                <thead>
+                                <tr>
+                                    <th scope="col">订单明细号</th>
+                                    <th scope="col">图书名字</th>
+                                    <th scope="col">数量</th>
+                                    <th scope="col">订单金额</th>
+                                    <th scope="col">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="orderDetail,orderDetailStat:${order.orderDetails}">
+                                    <th scope="row" th:text="${orderDetail.id}">1</th>
+                                    <td th:text="${orderDetail.book.title}">Mark</td>
+                                    <td th:text="${orderDetail.booknum}">Otto</td>
+                                    <td th:text="${orderDetail.summoney}">@mdo</td>
+                                    <td><a class="btn btn-primary btn-sm" th:href="@{/book/bookDetail/}+${orderDetail.book.id}">图书详情</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+            </div>
+
+
+
+
+            <!--<form action="/user/myCartTest/" method="post">-->
+            <!--<input name="id" th:value="${books!=null}?${books.id}">-->
+
+            <!--<input type="submit">-->
+            <!--</form>-->
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+window.onload=function (ev) {
+
+
+    for (var i=0;i<$(".condition").length;i++){
+        if ($('.condition').eq(i).text()=="支付成功")
+            $(".condition").eq(i).attr("class","condition badge badge-info")
+        else if ($('.condition').eq(i).text()=="已发货")
+            $(".condition").eq(i).attr("class","condition badge badge-danger")
+        else if ($('.condition').eq(i).text()=="订单完成")
+            $(".condition").eq(i).attr("class","condition badge badge-success")
+        else if ($('.condition').eq(i).text()=="退款审核中")
+            $(".condition").eq(i).attr("class","condition badge badge-dark")
+        else if ($('.condition').eq(i).text()=="退款完成")
+            $(".condition").eq(i).attr("class","condition badge badge-dark")
+        else if ($('.condition').eq(i).text()=="退货完成")
+            $(".condition").eq(i).attr("class","condition badge badge-warning")
+        else if ($('.condition').eq(i).text()=="同意退货")
+            $(".condition").eq(i).attr("class","condition badge badge-warning")
+        else if ($('.condition').eq(i).text()=="退货中")
+            $(".condition").eq(i).attr("class","condition badge badge-warning")
+        else if ($('.condition').eq(i).text()=="退货审核中")
+            $(".condition").eq(i).attr("class","condition badge badge-warning")
+        else if ($('.condition').eq(i).text()=="退货完成")
+            $(".condition").eq(i).attr("class","condition badge badge-warning")
+    }
+    $(document).on('click', '.handleOrder', function () {
+        var orderId = $(this).attr("orderId")
+        var way = $(this).text()
+        $.ajax({
+            url: '/user/handleOrder',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                way:way,
+                id:orderId,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                alert(data['info'])
+                location.reload();
+
+
+            },
+        })
+
+    })
+    $(document).on('click', '#submit', function () {
+        if ($("#condition").val() == "")
+
+        {
+
+            return false;
+        }
+        else {
+
+            $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+        }
+    })
+
+}
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

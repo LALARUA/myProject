@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+
+    <title>Signin Template for Bootstrap</title>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/resource/favicon.ico">
+    <!-- Custom styles for this template -->
+    <link href="/sta/Login/Login.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<form id="form" class="form-signin" action="#" method="post">
+    <h3>[[#{login.slogan}]]</h3>
+    <img class="mb-4" src="sta/Booker.png" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>
+    <p style="color: red;" th:text="${err}" th:if="${not #strings.isEmpty(err)}"></p>
+    <!--<label  class="sr-only" th:text="#{LoginDao.username}">Username</label>-->
+    <input type="email" name="username"  id="inputEmail" class="form-control" th:value="${user!=null}?${user.username}" placeholder="用户名" th:placeholder="#{login.username}" required autofocus>
+    <!--<label  class="sr-only" th:text="#{LoginDao.password}">Password</label>-->
+    <input type="password"name="password"  id="inputPassword" class="form-control" th:value="${user!=null}?${user.password}" th:placeholder="#{login.password}" placeholder="密码" required>
+    <input type="password"  id="sure" class="form-control" th:value="${user!=null}?${user.password}" th:placeholder="#{login.sure}" placeholder="确认密码" required>
+
+    <div  class="checkbox mb-3">
+        <label>
+            <span id="passerr"style="color: red;font-weight: bold"></span>
+            <input type="checkbox"class="rem" value="remember-me"> <span class="rem" th:text="#{login.remember}"></span>
+            <span class="click rem" style="margin-left: 30px">[[#{login.forget}]]</span>
+            <br><span style="color: red;font-weight: bold" class="rem" th:text="${err!=null}?${err}"></span>
+        </label>
+    </div>
+    <button id="btn" th:flag="${flag!=null}?flag:1"  class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{login.btn}">Sign in</button>
+    <span  id="log">[[#{login.noid}]]</span><span class="click" id="in" >[[#{login.register}]]</span>
+    <p class="mt-5 mb-3 text-muted">&copy; 2018</p>
+    <a class="btn btn-sm" th:href="@{/(l='zh_CN',flag=)}">中文</a>
+    <a class="btn btn-sm" th:href="@{/(l='en_US')}">English</a>
+</form>
+
+<script>
+
+    window.onload=function (ev) {
+        $("#sure").hide();
+
+        $(document).on('click','#btn',function(){
+            if ($("#btn").attr("flag")==2&&$("#inputPassword").val()!=$("#sure").val()){
+                $("#passerr").text("确认密码错误")
+                return false;
+            }
+        })
+        $(document).on('keyup','#sure',function(){
+            if ($("#inputPassword").val()!=$("#sure").val()){
+                $("#passerr").text("确认密码错误")
+                $("#passerr").css("color","red");
+
+            }
+            else  {$("#passerr").text("确认密码成功")
+                $("#passerr").css("color","green");
+            }
+
+        })
+
+        $(document).on('click','#in',function(){
+            button1();
+        })
+        function button1() {
+            $("#passerr").show();
+            $("#btn").attr("flag",2);
+            $("#sure").show();
+            $(".rem").hide();
+            $("#form").attr("action","/register");
+            $("#log").text("[[#{login.haveid}]]");
+            $("#in").text("[[#{login.btn}]]");
+            $("#btn").text("[[#{login.register}]]")
+
+            $(document).on('click','#in',function(){
+                button2();
+            })
+        }
+        function button2() {
+            $("#passerr").hide();
+
+            $("#btn").attr("flag",1);
+            $(".rem").show();
+            $("#sure").hide();
+            $("#form").attr("action","/login");
+            $("#log").text("[[#{login.noid}]]");
+            $("#in").text("[[#{login.register}]]");
+            $("#btn").text("[[#{login.btn}]]")
+
+            $(document).on('click','#in',function(){
+                button1();
+            })
+        }
+    }
+</script>
+</body>
+</html>

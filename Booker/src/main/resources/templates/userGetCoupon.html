@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Booker</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+    <!-- Custom styles for this template -->
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid" >
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">领取优惠券</h1>
+            </div>
+            <input type="hidden" id="userId" th:value="${session.user.id}">
+            <img src="/sta/0cbb4f190b1419b9d8e6df1cb4291bc1.png" style="height: 200px;width: 500px">
+            <button   th:typeId="1" style="margin-top: 145px;"
+                      th:class="${isGetCoupon[0]==true}?'btn btn-dark getCoupon':'btn btn-danger getCoupon'"
+                      th:text="${isGetCoupon[0]==true}?'已领取':'领取优惠券'"
+                        th:disabled="${isGetCoupon[0]==true}?true:false"
+            ></button>
+            <br>
+            <img src="/sta/9ec858be4c804de26ff5eb8439600f37.jpg" style="height: 200px;width: 500px">
+            <button th:typeId="2" style="margin-top: 145px;" th:class="${isGetCoupon[1]==true}?'btn btn-dark getCoupon':'btn btn-danger getCoupon'"
+                    th:text="${isGetCoupon[1]==true}?'已领取':'领取优惠券'"
+                    th:disabled="${isGetCoupon[1]==true}?true:false">领取优惠券</button>
+            <br>
+            <img src="/sta/c2de94d7da1c0737d55fd7a71a23b937.jpg" style="height: 200px;width: 500px">
+            <button th:typeId="3" style="margin-top: 145px;" th:class="${isGetCoupon[1]==true}?'btn btn-dark getCoupon':'btn btn-danger getCoupon'"
+                    th:text="${isGetCoupon[2]==true}?'已领取':'领取优惠券'"
+                    th:disabled="${isGetCoupon[2]==true}?true:false">领取优惠券</button>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    window.onload = function (ev) {
+        var userId = $("#userId").val();
+
+        $(document).on('click', '.getCoupon', function () {
+
+            $(this).attr("disabled","true")
+            $(this).attr("class","btn btn-dark getCoupon")
+            $(this).text("已领取")
+            var typeId=$(this).attr("typeId")
+
+            $.ajax({
+                url: '/user/getCoupon',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    userId:userId,
+                    typeId:typeId,
+
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+
+
+                },
+            })
+
+        })
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+
+    }
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

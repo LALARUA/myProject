@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.Booker.generator.mapper.UserCouponMapper">
+    <resultMap id="userCouponDetail" type="com.dx.Booker.generator.extendPojo.couponDetail">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="userId" jdbcType="INTEGER" property="userId"/>
+        <result column="typeId" jdbcType="INTEGER" property="typeId"/>
+        <result column="dateofacquisition" jdbcType="TIMESTAMP" property="dateofacquisition"/>
+
+        <association property="couponType" javaType="com.dx.Booker.generator.po.CouponType">
+           <id column="id1" javaType="INTEGER" property="id"/>
+            <result column="description" property="description"/>
+            <result column="name" property="name"/>
+            <result column="sale" property="sale"/>
+            <result column="condition" jdbcType="DOUBLE" property="condition"/>
+            <result column="discount" jdbcType="DOUBLE" property="discount"/>
+        </association>
+    </resultMap>
+    <select id="userCoupons" resultMap="userCouponDetail" parameterType="java.lang.Integer">
+        SELECT * from coupon,coupontype WHERE coupon.typeId = coupontype.id and coupon.userId = #{userId}
+    </select>
+</mapper>

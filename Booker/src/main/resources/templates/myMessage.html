@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myCart</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#myuserbar(activeUri='我的消息')"/>
+            <h1 th:if="${messages.size()==0}"><span class="badge badge-danger">暂无消息</span></h1>
+            <div class="list-group" style="clear: both">
+                <div class="list-group-item list-group-item-action flex-column align-items-start"
+                     th:each="message,messageStat:${messages}">
+                    <div class="d-flex w-100 justify-content-between">
+
+                        <h6 class="mb-1"><span data-feather="user"></span><span style="font-weight: bold"th:text="${message.userName}">用户</span></h6>
+                        <input type="hidden" class="userSendId" th:value="${message.userSend}">
+                        <h4>
+                            <span class="badge badge-primary" th:text="${message.showDate}">3 days ago</span>
+                        </h4>
+                    </div>
+                    <div  style="width:50em;font-size:20px; display:-webkit-box;-webkit-box-orient:vertical; -webkit-line-clamp:3;overflow: hidden;text-overflow: ellipsis" th:text="${message.detail}">
+                    </div>
+
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"></h5>
+                        <button th:index="${messageStat.index}" class="btn btn-danger deleteMessage" th:messageId="${message.id}">
+                            <span data-feather="delete" ></span><span>删除</span>
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    window.onload=function (ev) {
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+        $(document).on('click', '.deleteMessage', function () {
+            var  messageId = $(this).attr("messageId");
+            $.ajax({
+                url: '/message/deleteMessage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    messageId:messageId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload()
+                },
+
+                })
+            })
+
+
+    }
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

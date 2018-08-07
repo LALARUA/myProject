@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myCart</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#myuserbar(activeUri='我的消息')"/>
+            <h1 th:if="${coupons.size()==0}"><span class="badge badge-danger">没有优惠券哦</span></h1>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col" >优惠券名字</th>
+                    <th scope="col">优惠券描述</th>
+                    <th scope="col">领取时间</th>
+                    <th scope="col">过期时间</th>
+                </tr>
+                </thead>
+                <a th:if="${coupons.size()==0}" href="/user/userGetCouponPage">点击领取优惠券</a>
+                <tbody>
+                <tr class="couponTr" th:couponId="${coupon.id}" th:index="${couponStat.index}" th:each="coupon,couponStat:${coupons}">
+                    <th scope="row" class="couponName" th:text="${coupon.couponType.name}">1</th>
+                    <td th:text="${coupon.couponType.sale}" style="display:none;" class="couponSale"></td>
+                    <td th:text="${coupon.couponType.condition}" style="display:none;" class="couponCondition"></td>
+                    <td th:text="${coupon.couponType.discount}" style="display:none;" class="couponDiscount"></td>
+                    <!--<td th:text="${coupon.dateofacquisition}" class="addressPhone">Otto</td>-->
+                    <td th:text="${coupon.couponType.description}" class="couponDescription">@mdo</td>
+                    <td th:text="${coupon.receiveTime}" class="couponDescription">@mdo</td>
+                    <td  class="coupanOvertime">永不过期</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    window.onload=function (ev) {
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+
+
+
+    }
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

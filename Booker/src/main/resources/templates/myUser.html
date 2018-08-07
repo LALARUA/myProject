@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myUser</title>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <script type="text/javascript" src="/sta/switch-js/bootstrap-switch.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/sta/switch-css/bootstrap3/bootstrap-switch.min.css" rel="stylesheet" type="text/css">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+    <!-- Custom styles for this template -->
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{bar::topbar}"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='myuser')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#myuserbar(activeUri='个人中心')"/>
+            <div style="width: 400px;float: left">
+                <!--<span style="font-size:25px" class="badge badge-dark">我的信息</span>-->
+                <button type="button" id="editUserButton" class="tn-primary btn btn-info" data-toggle="modal" data-target="#edituser">
+                    修改个人信息
+                </button>
+                <button type="button" class="tn-primary btn btn-info" data-toggle="modal" data-target="#editpassword">
+                    修改密码
+                </button>
+
+                <table class="table">
+                    <tr>
+                        <th scope="col">我的邮箱</th>
+                        <td scope="col" th:text="${session.user.email}">First</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">性别</th>
+                        <td id="userSex" th:text="${session.user.sex}">zzzx</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">我的名字</th>
+                        <td id="username" th:text="${session.user.username}">Jacob</td>
+
+                    </tr>
+                    <tr>
+                        <th scope="row">我的兴趣爱好</th>
+                        <td id="userLoves" th:text="${session.user.love}">Larry</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="width: 400px;float: left;margin-left: 150px;margin-top: 38px;">
+                <img th:src="${session.user.icon}" style="float: left;width: 200px;height: 200px" alt="..." class="rounded-circle">
+                <button class="btn btn-danger" data-toggle="modal" data-target="#editIcon">修改头像</button>
+                <!--<span style="font-size:25px" class="badge badge-dark"></span>-->
+                <!--<table class="table">-->
+                    <!--<tr>-->
+                        <!--<th scope="col">我的生日</th>-->
+                        <!--<td scope="col">First</td>-->
+                    <!--</tr>-->
+
+                    <!--<tr>-->
+                        <!--<th scope="row">我的密码</th>-->
+                        <!--<td>zzzx</td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<th scope="row">我的名字</th>-->
+                        <!--<td>Jacob</td>-->
+
+                    <!--</tr>-->
+                    <!--<tr>-->
+                        <!--<th scope="row">我的兴趣爱好</th>-->
+                        <!--<td>Larry</td>-->
+                    <!--</tr>-->
+                <!--</table>-->
+            </div>
+            <div class="modal fade" id="editIcon" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" >修改图片</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" action="/user/editUserIcon" enctype="multipart/form-data">
+                                <input type="file" id="image" name="image" required>
+                                <input type="hidden" th:value="${session.user.id}" name="id">
+                                <input type="hidden" th:value="${session.user.icon}"name="icon">
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="editaddress" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                       aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">编辑地址</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="addressId">
+                        <input type="hidden" id="addressStatus">
+                        <div class="form-group">
+                            <label for="addressType"></label>
+                            <input type="text" class="form-control" id="addressType" placeholder="地址名字"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addressUserName"></label>
+                            <input type="text" class="form-control" id="addressUserName" placeholder="收件人姓名"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addressPhone"></label>
+                            <input type="tel" class="form-control" id="addressPhone" placeholder="收件人手机"
+                                   required>
+                        </div>
+                        <div class="form-group">
+                            <label for="addressDetail"></label>
+                            <input type="text" class="form-control" id="addressDetail" placeholder="详细地址"
+                                   required>
+                        </div>
+                        <div class="switch">
+                            <span  style="margin-right:20px;font-size: 15px">默认地址</span>
+                            <input  type="checkbox" checked id="mySwitch"/>
+
+                        </div>
+                    </div>
+                    <div  class="modal-footer">
+                        <button type="button" th:index="0" th:flag=0 id="submitEditAddress" class="btn btn-primary">保存</button>
+                        <button type="button" id="closeModal" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="modal fade" id="editpassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">修改密码</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!--<form action="/user/updatePassword" method="post">-->
+
+                            <input type="hidden" name="email" id="inputEmail" th:value="${session.user.getEmail()}">
+                            <div class="form-group">
+                                <label for="newPassword"></label>
+                                <input type="password" class="form-control" name="password" id="newPassword"
+                                       placeholder="新密码" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="surePassword"></label>
+                                <input type="password" class="form-control" name="surePassword" id="surePassword"
+                                       placeholder="确认新密码" required>
+                            </div>
+                            <br>
+                            <div class="form-inline">
+                                <input type="text" name="verification" id="verify" class="form-control"
+                                       th:placeholder="验证码">
+                                <button type="button" style="align-content: center" class="btn btn-info" id="getVerify">
+                                    验证码
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <span style="font-size: 20px;font-weight: bold" id="editPasswordError"></span>
+                                <br>
+                            </div>
+                            <button id="saveNewPassword" type="submit" class="btn btn-primary">保存</button>
+                            <!--</form>-->
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="edituser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="">编辑个人信息</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="/user/editUser" method="post">
+                                <div class="form-group">
+                                    <label for="name"></label>
+                                    <input type="text" class="form-control" name="username" id="name"
+                                        th:value="${session.user.username}"   placeholder="用户名字" required>
+                                </div>
+                                <input type="hidden" th:value="${session.user.id}" name="id">
+
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input userSex" name="sex" type="radio"
+                                           id="inlineRadio1" value="男">
+                                    <label class="form-check-label"  for="inlineRadio1">男</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input userSex" name="sex" type="radio"
+                                           id="inlineRadio2" value="女">
+                                    <label class="form-check-label" for="inlineRadio2">女</label>
+                                </div>
+                                <div class="form-group">
+                                    <!--<label for="phone"></label>-->
+                                    <!--<input type="password" class="form-control" id="phone" placeholder="手机">-->
+                                </div>
+                                <div class="form-group">
+                                    爱好<br>
+                                    <div th:each="tag,tagStat:${tags}" class="custom-control custom-checkbox custom-control-inline">
+                                        <input type="checkbox" name="loves"  th:value="${tag.name}" class="custom-control-input love " th:id="'bookTag'+${tagStat.count}" >
+                                        <label class="custom-control-label" th:for="'bookTag'+${tagStat.count}" th:text="${tag.name}">小说</label>
+                                    </div>
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="文学" class="custom-control-input love " id="bookTag2">-->
+                                        <!--<label class="custom-control-label" for="bookTag2">文学</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"  value="艺术" class="custom-control-input love " id="bookTag3">-->
+                                        <!--<label class="custom-control-label" for="bookTag3">艺术</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="青春" class="custom-control-input love " id="bookTag4">-->
+                                        <!--<label class="custom-control-label" for="bookTag4">青春</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"  value="动漫/幽默" class="custom-control-input love " id="bookTag5">-->
+                                        <!--<label class="custom-control-label" for="bookTag5">动漫/幽默</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="励志/成功" class="custom-control-input love " id="bookTag6">-->
+                                        <!--<label class="custom-control-label" for="bookTag6">励志/成功</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="育儿/家教" class="custom-control-input love " id="bookTag7">-->
+                                        <!--<label class="custom-control-label" for="bookTag7">育儿/家教</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="两性" class="custom-control-input love " id="bookTag8">-->
+                                        <!--<label class="custom-control-label" for="bookTag8">两性</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="保健/健身" class="custom-control-input love " id="bookTag9">-->
+                                        <!--<label class="custom-control-label" for="bookTag9">保健/健身</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"value="时尚/美妆" class="custom-control-input love " id="bookTag10">-->
+                                        <!--<label class="custom-control-label" for="bookTag10">时尚/美妆</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="旅游/地图" class="custom-control-input love " id="bookTag11">-->
+                                        <!--<label class="custom-control-label" for="bookTag11">旅游/地图</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="体育/运动" class="custom-control-input love " id="bookTag12">-->
+                                        <!--<label class="custom-control-label" for="bookTag12">体育/运动</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="历史/文化" class="custom-control-input love " id="bookTag13">-->
+                                        <!--<label class="custom-control-label" for="bookTag13">历史/文化</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="政治/军事/法律" class="custom-control-input love " id="bookTag14">-->
+                                        <!--<label class="custom-control-label" for="bookTag14">政治/军事/法律</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="心理" class="custom-control-input love " id="bookTag15">-->
+                                        <!--<label class="custom-control-label" for="bookTag15">心理</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="社会科学" class="custom-control-input love " id="bookTag16">-->
+                                        <!--<label class="custom-control-label" for="bookTag16">社会科学</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"value="经济" class="custom-control-input love " id="bookTag17">-->
+                                        <!--<label class="custom-control-label" for="bookTag17">经济</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="科普/科学" class="custom-control-input love " id="bookTag18">-->
+                                        <!--<label class="custom-control-label" for="bookTag18">科普/科学</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"  value="侦探/悬疑" class="custom-control-input love " id="bookTag19">-->
+                                        <!--<label class="custom-control-label" for="bookTag19">侦探/悬疑</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves"value="医学" class="custom-control-input love " id="bookTag20">-->
+                                        <!--<label class="custom-control-label" for="bookTag20">医学</label>-->
+                                    <!--</div>-->
+                                    <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                                        <!--<input type="checkbox" name="loves" value="计算机" class="custom-control-input love " id="bookTag21">-->
+                                        <!--<label class="custom-control-label" for="bookTag21">计算机</label>-->
+                                    <!--</div>-->
+                                </div>
+                                <button type="submit" id="submitEditUser" class="btn btn-primary">保存</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div style="clear: both">
+                <h2><span class="badge badge-info">最近订单(点击订单查看订单明细)</span></h2>
+               <div>
+                   <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单号</span></div>
+                   <div style="float: left;width: 350px"><span style="font-size: 15px;font-weight: bold">收货地址</span></div>
+                   <div style="float: left;width: 150px"><span style="font-size: 15px;font-weight: bold">订单金额</span></div>
+                   <div style="float: left;width: 280px"><span style="font-size: 15px;font-weight: bold">订单时间</span></div>
+                   <div style="float: left;width: 220px"><span style="font-size: 15px;font-weight: bold">订单状态</span></div>
+               </div>
+                <h1 th:if="${orders.size()==0}"><span class="badge badge-danger">暂无订单</span></h1>
+                    <!--<tr>-->
+                        <!--<th scope="col">订单号</th>-->
+                        <!--<th scope="col">收货地址</th>-->
+                        <!--<th scope="col">订单金额</th>-->
+                        <!--<th scope="col">订单时间</th>-->
+                        <!--<th scope="col">订单状态</th>-->
+                    <!--</tr>-->
+
+
+                <div style="width:100%;clear: both" data-toggle="collapse"th:href="@{#collapseExample}+${orderStat.index}" role="button" aria-expanded="false" aria-controls="collapseExample" th:each="order,orderStat:${orders}">
+                    <div style="width:130px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span  th:text="${order.id}"></span>
+                    </div>
+                    <div style="float: left;width:370px;font-size: 20px;word-wrap: break-word">
+                        <span style="padding-left: 20px" th:text="${order.addressDetail}">Mark</span>
+
+                    </div>
+                    <div style="width:150px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.summoney}">Otto</span>
+
+                    </div>
+
+                    <div style="width:280px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span th:text="${order.datetime}">@mdo</span>
+
+                    </div>
+                    <div  style="width:220px;font-size: 20px;float: left;word-wrap: break-word">
+                        <span class="condition" th:text="${order.condition}">@twitter</span>
+                        <button th:if="${order.condition=='支付成功'}" th:orderId="${order.id}" class="btn-sm btn btn-dark refundOrder handleOrder">申请退款</button>
+                        <button th:if="${order.condition=='已发货'}" th:orderId="${order.id}" class="sureOrder btn-sm btn btn-success handleOrder">确认收货</button>
+                        <button th:if="${order.condition=='已发货'}" th:orderId="${order.id}" class=" btn-sm btn btn-warning handleOrder">申请退货</button>
+                        <button th:if="${order.condition=='同意退货'}" th:orderId="${order.id}" class=" btn-sm btn btn-warning handleOrder">退货发送</button>
+                    </div>
+                    <ul style="clear: both" class="nav nav-list">        <li class="divider"></li>    </ul>
+                    <div style="clear: both" class="collapse" th:id="collapseExample+${orderStat.index}">
+                        <table class="table table-dark">
+                            <thead>
+                            <tr>
+                                <th scope="col">订单明细号</th>
+                                <th scope="col">图书名字</th>
+                                <th scope="col">数量</th>
+                                <th scope="col">订单金额</th>
+                                <th scope="col">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="orderDetail,orderDetailStat:${order.orderDetails}">
+                                <th scope="row" th:text="${orderDetail.id}">1</th>
+                                <td th:text="${orderDetail.book.title}">Mark</td>
+                                <td th:text="${orderDetail.booknum}">Otto</td>
+                                <td th:text="${orderDetail.summoney}">@mdo</td>
+                                <td><a class="btn btn-primary btn-sm" th:href="@{/book/bookDetail/}+${orderDetail.book.id}">图书详情</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div style="clear: both">
+                <h2><span class="badge badge-info">收货地址</span> <button class="btn btn-primary" id="addNewAddress" data-toggle="modal" data-target="#editaddress">新增地址</button></h2>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">收货地址</th>
+                        <th scope="col">收件人名字</th>
+                        <th scope="col">收件人电话</th>
+                        <th scope="col" width="550px">详细地址</th>
+                        <th scope="col" width="170px">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="address,addressStat:${addresses}">
+                        <th scope="row" class="addressType" th:text="${address.addressType}">1</th>
+                        <td th:text="${address.userName}" class="addressUserName">Mark</td>
+                        <td th:text="${address.phone}" class="addressPhone">Otto</td>
+                        <td th:text="${address.addressDetail}" class="addressDetail">@mdo</td>
+                        <td>
+                            <button th:addressId="${address.id}" th:index="${addressStat.index}" th:addressStatus="${address.status}" type="button" class="editAddress btn-sm btn-primary"
+                                    data-toggle="modal" data-target="#editaddress">
+                                编辑
+                            </button>
+                            <button type="button" class="btn-sm btn-danger deleteAddress" th:addressId="${address.id}">删除</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+<script>
+    window.onload = function (ev) {
+        var rePassword = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+        var phone=/^1[3|4|5|8][0-9]\d{4,8}$/
+        $("#mySwitch").bootstrapSwitch()
+        $("#mySwitch").bootstrapSwitch('state',true,true);
+    $("#mySwitch").bootstrapSwitch()
+
+        $('#mySwitch').on('switchChange.bootstrapSwitch', function (event,state) {
+            if (state==true) {
+                $("#mySwitch").val(1)
+            }
+            else
+                if (state == false) {
+                    $("#mySwitch").val(0)
+
+            }
+        });
+                for (var i=0;i<$(".condition").length;i++){
+                if ($('.condition').eq(i).text()=="支付成功")
+                    $(".condition").eq(i).attr("class","condition badge badge-info")
+                else if ($('.condition').eq(i).text()=="已发货")
+                    $(".condition").eq(i).attr("class","condition badge badge-danger")
+                else if ($('.condition').eq(i).text()=="订单完成")
+                    $(".condition").eq(i).attr("class","condition badge badge-success")
+                else if ($('.condition').eq(i).text()=="退款审核中")
+                    $(".condition").eq(i).attr("class","condition badge badge-dark")
+                else if ($('.condition').eq(i).text()=="退款完成")
+                    $(".condition").eq(i).attr("class","condition badge badge-dark")
+                else if ($('.condition').eq(i).text()=="退货完成")
+                    $(".condition").eq(i).attr("class","condition badge badge-warning")
+                else if ($('.condition').eq(i).text()=="同意退货")
+                    $(".condition").eq(i).attr("class","condition badge badge-warning")
+                else if ($('.condition').eq(i).text()=="退货中")
+                    $(".condition").eq(i).attr("class","condition badge badge-warning")
+                else if ($('.condition').eq(i).text()=="退货审核中")
+                    $(".condition").eq(i).attr("class","condition badge badge-warning")
+                else if ($('.condition').eq(i).text()=="退货完成")
+                    $(".condition").eq(i).attr("class","condition badge badge-warning")
+            }
+
+        $(document).on('click', '#submitEditUser', function () {
+            var name = $("#name").val();
+            if (name.length>9)
+            {
+                alert("名字长度不超过9")
+                return false;
+            }
+
+        })
+        $(document).on('click', '.handleOrder', function () {
+            var orderId = $(this).attr("orderId")
+            var way = $(this).text()
+            $.ajax({
+                url: '/user/handleOrder',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    way:way,
+                    id:orderId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload();
+
+
+                },
+            })
+
+        })
+
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+        $(document).on('click', '.deleteAddress', function () {
+
+            if (confirm("确认删除?"))
+            {
+                var id = $(this).attr("addressId")
+                $.ajax({
+                    url: '/user/address',
+                    type: 'POST', //
+                    async: true,    //或false,是否异步
+                    data: {
+                        id:id,
+                        flag:2,
+                    },
+                    timeout: 5000,    //超时时间
+                    dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                    success: function (data) {
+                        alert(data['info'])
+                        location.reload();
+
+
+                    },
+                })
+            }
+
+        })
+
+        $(document).on('click', '#addNewAddress', function () {
+            $("#mySwitch").bootstrapSwitch("state",false,true);
+            $("#addressId").val("")
+            $("#addressStatus").val("")
+            $("#addressType").val("")
+            $("#addressPhone").val("")
+            $("#addressDetail").val("")
+            $("#addressUserName").val("")
+            $("#submitEditAddress").attr("flag", 1);
+
+        })
+        $(document).on('click', '#submitEditAddress', function () {
+            var addressId =  $("#addressId").val()
+            var addressStatus = $("#mySwitch").val()
+            var index=$(this).attr("index")
+            var addressType =  $("#addressType").val()
+            var addressPhone =  $("#addressPhone").val()
+            var addressDetail =  $("#addressDetail").val()
+            var addressUserName =   $("#addressUserName").val()
+            var  flag = $("#submitEditAddress").attr("flag")
+            if (addressType==""||addressPhone==""||addressDetail==""||addressUserName=="")
+            {
+                alert("请输入完整信息")
+                return false
+            }
+                if (!phone.test(addressPhone)){
+                alert("请输入正确的手机号")
+                    return false
+                }
+            $.ajax({
+                url: '/user/address',
+                type: 'PUT', //
+                async: true,    //或false,是否异步
+                data: {
+                  id:addressId,
+                    addressDetail:addressDetail,
+                    addressType:addressType,
+                    phone:addressPhone,
+                    userName:addressUserName,
+                    status:addressStatus,
+                    flag:flag,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload();
+
+
+                },
+            })
+
+        })
+
+
+        $(document).on('click', '.editAddress', function () {
+            var addressId = $(this).attr("addressId");
+            var addressStatus = $(this).attr("addressStatus")
+            var index = $(this).attr("index")
+            var addressType = $(".addressType").eq(index).text();
+            var addressUserName = $(".addressUserName").eq(index).text();
+            var addressPhone = $(".addressPhone").eq(index).text();
+            var addressDetail = $(".addressDetail").eq(index).text();
+
+            if (addressStatus==1){
+                $("#mySwitch").bootstrapSwitch("state",true,true);
+            }
+            else $("#mySwitch").bootstrapSwitch("state",false,true);
+            $("#submitEditAddress").attr("flag", 0);
+            $("#submitEditAddress").attr("addressId", addressId);
+            $("#submitEditAddress").attr("index",index)
+            $("#addressId").val(addressId)
+            $("#addressStatus").val(addressStatus)
+            $("#mySwitch").val(addressStatus)
+            $("#addressType").val(addressType)
+            $("#addressPhone").val(addressPhone)
+            $("#addressDetail").val(addressDetail)
+            $("#addressUserName").val(addressUserName)
+
+
+        })
+
+        $(document).on('click', '#editUserButton', function () {
+            var loves = $("#userLoves").text();
+            var sex = $("#userSex").text()
+
+            
+
+
+            for (var i=0;i<$(".love").length;i++)
+            {
+                if (loves.indexOf($(".love").eq(i).val())!=-1)
+                {
+
+                    $(".love").eq(i).attr("checked","checked")
+                }
+            }
+
+            for (var i=0;i<$(".userSex").length;i++){
+                if (sex.indexOf($(".userSex").eq(i).val())!=-1){
+                    $(".userSex").eq(i).attr("checked","checked")
+                }
+            }
+            
+        })
+
+        $(document).on('click', '#saveNewPassword', function () {
+
+            if (!rePassword.test($("#newPassword").val())) {
+
+                $("#editPasswordError").css("color", "red");
+
+                $("#editPasswordError").text("请输入8-16位数字与字母组合密码")
+                return false;
+            }
+            else if ($("#newPassword").val() != $("#surePassword").val()) {
+                $("#editPasswordError").text("确认密码错误")
+                $("#editPasswordError").css("color", "red");
+                return false;
+
+            }
+            else if ($("#verify").val() == "") {
+                $("#editPasswordError").css("color", "red");
+                $("#editPasswordError").text("请输入验证码");
+                return false
+            }
+            var email = $("#inputEmail").val();
+            var password = $("#newPassword").val();
+            var verification = $("#verify").val();
+            $.ajax({
+                url: '/user/updatePassword',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    email: email,
+                    password: password,
+                    verification: verification
+
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    $("#verify").val("");
+                    alert(data['info'])
+
+                },
+            })
+
+
+        })
+        $(document).on('click', '#verify', function () {
+            $("#editPasswordError").css("color", "green");
+            $("#editPasswordError").text("");
+        })
+        $(document).on('keyup', '#newPassword', function () {
+
+            if (!rePassword.test($("#newPassword").val())) {
+                $("#editPasswordError").css("color", "red");
+                $("#editPasswordError").text("请输入8-16位数字与字母组合密码")
+            }
+            else {
+                $("#editPasswordError").text("");
+                $("#editPasswordError").css("color", "green");
+            }
+        })
+        $(document).on('keyup', '#surePassword', function () {
+            if ($("#newPassword").val() != $("#surePassword").val()) {
+                $("#editPasswordError").text("确认密码错误")
+                $("#editPasswordError").css("color", "red");
+
+            }
+            else {
+
+                $("#editPasswordError").text("")
+                $("#editPasswordError").css("color", "green");
+            }
+        })
+        $(document).on('click', '#getVerify', function () {
+            var time = 60;
+            var email = $("#inputEmail").val();
+            $("#editPasswordError").text("")
+            var timer = setInterval(function () {
+                time--;
+                $("#getVerify").text("[[#{login.wait}]]" + time + "秒")
+                $("#getVerify").attr("disabled", true)
+                if (time == 0) {
+                    time = 60;
+                    clearInterval(timer);
+                    $("#getVerify").text("[[#{login.getverify}]]");
+                    $("#getVerify").attr("disabled", false);
+                }
+            }, 1000);
+            $.ajax({
+                url: '/confirmEmail',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    email: email,
+                    flag: "3",
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    $("#editPasswordError").text(data['err']);
+                    $("#editPasswordError").css("color", "red");
+
+                },
+            })
+
+        })
+    }
+
+</script>
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

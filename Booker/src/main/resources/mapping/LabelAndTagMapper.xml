@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dx.Booker.generator.mapper.LabelAndTagMapper">
+    <resultMap id="allTags" type="com.dx.Booker.generator.extendPojo.allTags">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="labelName" jdbcType="VARCHAR" property="name"/>
+        <collection property="tags" ofType="com.dx.Booker.generator.po.tag">
+            <id column="tagId" javaType="INTEGER" property="id"/>
+            <result column="tagName" property="name"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAllTags" resultMap="allTags">
+    SELECT label.id AS id,label.name AS labelName,tag.id AS tagId,tag.`name` as tagName,
+    tag.`status` as status from label,tag where label.id=tag.labelId
+    </select>
+    <update id="updateHotTag" parameterType="java.util.List">
+        update tag set status=1 WHERE id IN
+        <foreach close=")" collection="list" item="tagId" open="(" separator=",">
+            #{tagId}
+        </foreach>
+    </update>
+</mapper>

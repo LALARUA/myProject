@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>adminHandleTag</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri='管理标签')"/>
+            <h3>添加标签</h3>
+
+            <h4><span class="badge badge-danger">方式一</span></h4>
+            <form action="/admin/addTags" method="post" class="form-inline">
+                <input type="hidden" th:value="0" name="flag">
+
+                <select name="id" required class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+
+                    <option th:value="${label.id}" th:each="label,labelStat:${labels}" th:text="${label.name}">One</option>
+
+
+                </select>
+                <label class="sr-only" for="inlineFormInputName2">小标签</label>
+                <input style="margin-top: 9px;" type="text" name="tagName" required class="form-control mb-2 mr-sm-2" id="inlineFormInputName2" placeholder="小标签">
+
+                <button type="submit" class="btn btn-primary my-1">Submit</button>
+            </form>
+            <br>
+            <h4><span class="badge badge-danger">方式二</span></h4>
+            <form action="/admin/addTags" method="post" class="form-inline">
+                <input type="hidden" th:value="1" name="flag">
+                <input type="text" name="name" required class="form-control mb-2 mr-sm-2" id="newLabel" placeholder="大标签">
+                <label class="sr-only" for="newTag">小标签</label>
+                <input type="text" name="tagName" required class="form-control mb-2 mr-sm-2" id="newTag" placeholder="小标签">
+                <button type="submit" class="btn btn-primary my-1">Submit</button>
+            </form>
+
+            <div style="width: 400px;">
+                <h3><span class="badge badge-danger">热门类别</span></h3>
+                <form action="/admin/handleHotTag" method="post">
+                    <div class="form-group">
+                        <div th:each="tag,tagStat:${tags}" class="custom-control custom-checkbox custom-control-inline">
+                            <input th:status="${tag.status}" type="checkbox" name="tagIds"  th:value="${tag.id}" class="custom-control-input hotTag" th:id="'bookTag'+${tagStat.count}" >
+                            <label class="custom-control-label" th:for="'bookTag'+${tagStat.count}" th:text="${tag.name}">小说</label>
+                        </div>
+                        <button class="btn btn-primary" type="submit">提交</button>
+                    </div>
+                </form>
+
+            </div>
+            <br>
+
+            <div style="width: 100%;">
+                <div th:each="label,labelStat:${labels}" style="width: 350px;border: solid 1px black;float: left;margin-right: 10px;margin-top: 5px;">
+                    <button data-toggle="modal" data-target="#handleLabel"
+
+                    th:text="${label.name}" th:labelId="${label.id}" class="btn btn-dark label">大标签</button>
+                    <br>
+                    <button data-toggle="modal" data-target="#handleTag"
+                            th:tagId="${tag.id}" th:labelId="${label.id}"
+                            th:labelName="${label.name}"
+                    style="margin-top: 5px; margin-right: 5px" th:each="tag,tagStat:${label.tags}" th:text="${tag.name}" class="btn btn-sm-light tag">小标签</button>
+                </div>
+            </div>
+
+            <div class="modal fade" id="handleTag" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="handleTagId">
+                            <div class="form-group">
+                                <label for="handleTagName"></label>
+                                <input type="text" class="form-control" name="password" id="handleTagName"
+                                       placeholder="tag名" required>
+                            </div>
+
+                                <label for="handleTagLabelId"></label>
+                                <select name="id" required class="custom-select my-1 mr-sm-2" id="handleTagLabelId">
+
+                                    <option th:value="${label.id}" class="labelOption" th:each="label,labelStat:${labels}" th:text="${label.name}">One</option>
+
+                                </select>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                            <button type="button" id="updateTag" class="btn btn-primary">保存</button>
+                            <button type="button" id="deleteTag" class="btn btn-danger">删除此标签</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="handleLabel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="handleLabelId">
+                            <div class="form-group">
+                                <label for="handleTagName"></label>
+                                <input type="text" class="form-control" name="password" id="handleLabelName"
+                                       placeholder="label名" required>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                            <button type="button" id="updateLabel" class="btn btn-primary">保存</button>
+                            <button type="button" id="deleteLabel" class="btn btn-danger">删除此标签</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    for (var i=0;i<$(".hotTag").length;i++)
+    {
+        if ($(".hotTag").eq(i).attr("status")==1)
+        {
+
+            $(".hotTag").eq(i).attr("checked","checked")
+        }
+    }
+    $(document).on('click', '.tag', function () {
+        var tagId = $(this).attr("tagId")
+        var tagName=$(this).text()
+        var labelName=$(this).attr("labelName")
+        for (var i=0;i<$(".labelOption").length;i++){
+            if (labelName==$(".labelOption").eq(i).text())
+            {
+
+                $(".labelOption").eq(i).attr("selected","selected")
+                break;
+            }
+        }
+
+        $("#handleTagName").val(tagName)
+        $("#handleTagId").val(tagId)
+    })
+    $(document).on('click', '.label', function () {
+        var labelId = $(this).attr("labelId")
+
+        var labelName=$(this).text();
+
+        $("#handleLabelId").val(labelId)
+        $("#handleLabelName").val(labelName)
+    })
+    $(document).on('click', '#updateLabel', function () {
+        var labelId = $("#handleLabelId").val();
+        var labelName = $("#handleLabelName").val();
+        var id=$("#handleTagLabelId").val();
+        $.ajax({
+            url: '/admin/handleTags',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                flag:4,
+               id:labelId,
+                name:labelName,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                location.reload();
+            },
+        })
+
+    })
+    $(document).on('click', '#deleteLabel', function () {
+        var labelId = $("#handleLabelId").val();
+
+        $.ajax({
+            url: '/admin/handleTags',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                flag:2,
+                id:labelId,
+
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                location.reload();
+            },
+        })
+
+    })
+    $(document).on('click', '#updateTag', function () {
+        var tagId = $("#handleTagId").val();
+        var tagName = $("#handleTagName").val();
+        var id=$("#handleTagLabelId").val();
+        $.ajax({
+            url: '/admin/handleTags',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                flag:5,
+                tagId:tagId,
+                tagName:tagName,
+                id:id,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                location.reload();
+            },
+        })
+
+    })
+
+    $(document).on('click', '#deleteTag', function () {
+        var tagId = $("#handleTagId").val();
+        $.ajax({
+            url: '/admin/handleTags',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                flag:3,
+                tagId:tagId,
+
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                location.reload()
+            },
+        })
+    })
+    $(document).on('click', '#submit', function () {
+        if ($("#condition").val() == "")
+
+        {
+
+            return false;
+        }
+        else {
+
+            $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+        }
+    })
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

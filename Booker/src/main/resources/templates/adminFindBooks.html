@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>adminFindBooks</title>
+
+
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri='查找Book')"/>
+            <input type="hidden" id="userId" th:value="${session.user!=null}?${session.user.id}">
+            <input type="hidden" id="pageNum" th:pageNum="${pageNum}">
+            <input type="hidden" id="pageNow" th:pageNow=1>
+            <input type="hidden" id="pageIndex" th:pageIndex=0>
+            <input type="hidden" id="keyWord" th:value="${keyWord}">
+            <input type="hidden" id="method" th:method="${method}" >
+            <input type="hidden" id="orderBy" th:value="${orderBy}">
+
+
+            <form id="form">
+                <div class="form-row align-items-center">
+                    <div class="col-auto my-1">
+
+                        <select class="custom-select mr-sm-2" id="searchMethod">
+                            <option value="1" selected>模糊查询所有</option>
+                            <option value="2">按书名查询</option>
+                            <option value="3">按作者查询</option>
+                            <option value="4">按ISBN查询</option>
+                            <option value="5">按标签查询</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" id="con" required placeholder="关键字 ">
+                    </div>
+                    <div class="col-auto my-1">
+                        <button type="submit" id="submitFindBook" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+            <input type="hidden" th:value="${method}">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">BookTitle</th>
+                    <th scope="col">BookAuthor</th>
+                    <th scope="col">Tags</th>
+                    <th scope="col">ISBN</th>
+                    <th scope="col" width="200px">操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="book,bookStat:${books}">
+
+                    <td scope="row" th:text="${book.title}" class="bookTitle">Mark</td>
+                    <td th:text="${book.author}" class="bookAuthor">Otto</td>
+                    <td th:text="${book.tags}" style="width: 500px" class="bookTags">@mdo</td>
+                    <td th:text="${book.isbn}" class="bookISBN">@mdo</td>
+                    <td><a th:href="@{/admin/updateBookPage/}+${book.id}"  type="button" class="btn btn-primary btn-sm bookEdit">详情修改</a>
+                    <button type="button" th:bookId="${book.id}" class="deleteBook btn btn-danger btn-sm bookDelete">删除</button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            <h1 th:if="${method!=0&&books.size()==0}">查询无结果</h1>
+            <nav  th:if="${pageNum>1}" style="margin-left:400px;clear: both" aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" id="previous" href="#">Previous</a>
+                    </li>
+
+                    <li class="page-item">
+                        <button class="page-link " id="pagePrevious" href="" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+
+                        </button>
+                    </li>
+                    <li class="page-item pageli" th:each="page,pageStat:${#numbers.sequence(1,pageNum>8?8:pageNum)}"><a
+                            class="page-link page active" th:index="${pageStat.index}" href="#" th:text="${pageStat.count}"></a></li>
+                    <li class="page-item">
+                        <button id="pageNext" class="page-link " href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only" >Next</span>
+                        </button>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"id="next" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+window.onload = function (ev) {
+    var keyWord = $("#keyWord").val();
+    var orderBy = $("#orderBy").val();
+    $(document).on('click', '#submit', function () {
+
+
+        if ($("#condition").val() == "")
+
+        {
+
+            return false;
+        }
+        else {
+
+            $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+        }
+    })
+    $(document).on('click', '#submitFindBook', function () {
+      var method = $("#searchMethod").val();
+      keyWord = $("#con").val();
+
+      $("#form").attr("action",'/admin/book/'+method+'/'+keyWord+'/'+orderBy)
+
+    })
+    $(document).on('click', '.deleteBook', function () {
+       var bookId = parseInt($(this).attr("bookId"))
+        $.ajax({
+            url: '/admin/deleteBook',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                bookId:bookId,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                alert(data['info'])
+                location.reload();
+            },
+        })
+
+    })
+    $(".pageli").eq(0).attr("class","page-item pageli active")
+
+
+
+
+
+    $(document).on('click', '#pagePrevious', function () {
+        if (parseInt($(".page").eq(0).text()) <= 1)
+            return false
+        else {
+            for (var i = 0; i <= 8; i++) {
+                $(".page").eq(i).text(parseInt($(".page").eq(i).text()) - 8);
+                $(".page").eq(i).show();
+            }
+            if($(".page").eq(0).text()<=0){
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(i+1);
+                    $(".page").eq(i).show();
+                }
+            }
+            for(var i=0;i<8;i++){
+                if ($(".page").eq(i).text()==$("#pageNow").attr("pageNow"))
+                    $(".pageli").eq(i).attr("class","page-item pageli active")
+                else
+                    $(".pageli").eq(i).attr("class","page-item pageli")
+            }
+        }
+
+    })
+
+    $(document).on('click', '#pageNext', function () {
+        for(var i=0;i<8;i++){
+            if (parseInt($(".page").eq(i).text()) >= parseInt($("#pageNum").attr("pageNum")))
+                return false
+        }
+
+
+        {
+            for (var i = 0; i < 8; i++) {
+                $(".page").eq(i).text(parseInt($(".page").eq(i).text()) + 8);
+                if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                    $(".page").eq(i).hide();
+            }
+            for(var i=0;i<8;i++){
+                if ($(".page").eq(i).text()==$("#pageNow").attr("pageNow"))
+                    $(".pageli").eq(i).attr("class","page-item pageli active")
+                else
+                    $(".pageli").eq(i).attr("class","page-item pageli")
+            }
+
+        }
+
+    })
+    $(document).on('click', '#previous', function () {
+        if($("#pageNow").attr("pageNow")==1)
+            return false
+
+
+        var pageNow =parseInt( $("#pageNow").attr("pageNow"))-1
+
+        var pageIndex = parseInt($("#pageIndex").attr("pageIndex"))-1
+        for (var i = 7; i >= 0; i--) {
+            $(".page").eq(i).text(parseInt(pageNow+i-4))
+            $(".page").eq(i).show();
+            if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                $(".page").eq(i).hide();
+        }
+        if($(".page").eq(0).text()<=0){
+            for (var i = 0; i <= 8; i++) {
+                $(".page").eq(i).text(i+1);
+                $(".page").eq(i).show();
+            }
+        }
+        for(var i=0;i<8;i++){
+            if(parseInt($(".page").eq(i).text())==pageNow)
+                $(".pageli").eq(i).attr("class","page-item pageli active")
+            else
+                $(".pageli").eq(i).attr("class","page-item pageli")
+        }
+
+        $("#pageIndex").attr("pageIndex",pageIndex)
+        $("#pageNow").attr("pageNow",pageNow)
+        var method=$("#method").attr("method")
+
+
+        $.ajax({
+            url: '/admin/findBooksByPage',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                pageNow: pageNow,
+                keyWord: keyWord,
+                method:method,
+                orderBy:orderBy,
+
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                for(var i=0;i<data.length;i++){
+                    $(".bookTitle").eq(i).text(data[i].title)
+                    $(".bookAuthor").eq(i).text(data[i].author)
+                    $(".bookISBN").eq(i).text(data[i].isbn)
+                    $(".bookEdit").eq(i).attr("href","/admin/updateBookPage/"+data[i].id)
+                    $(".bookDelete").eq(i).attr("bookId",data[i].id)
+
+                }
+
+            },
+        })
+    })
+    $(document).on('click', '#next', function () {
+        if($("#pageNow").attr("pageNow")==$("#pageNum").attr("pageNum"))
+            return false
+
+
+        var pageNow =parseInt($("#pageNow").attr("pageNow"))+1
+
+        var pageIndex = parseInt($("#pageIndex").attr("pageIndex"))+1
+
+
+        for (var i = 7; i >= 0; i--) {
+            $(".page").eq(i).text(parseInt(pageNow+i-4))
+            $(".page").eq(i).show();
+            if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                $(".page").eq(i).hide();
+        }
+        if($(".page").eq(0).text()<=0){
+            for (var i = 0; i <= 8; i++) {
+                $(".page").eq(i).text(i+1);
+                $(".page").eq(i).show();
+            }
+        }
+        for(var i=0;i<8;i++){
+            if(parseInt($(".page").eq(i).text())==pageNow)
+                $(".pageli").eq(i).attr("class","page-item pageli active")
+            else
+                $(".pageli").eq(i).attr("class","page-item pageli")
+        }
+
+        $("#pageIndex").attr("pageIndex",pageIndex)
+        $("#pageNow").attr("pageNow",pageNow)
+        var method=$("#method").attr("method")
+        $.ajax({
+            url: '/admin/findBooksByPage',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                pageNow: pageNow,
+                keyWord: keyWord,
+                method:method,
+                orderBy:orderBy,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                for(var i=0;i<data.length;i++){
+                    $(".bookTitle").eq(i).text(data[i].title)
+                    $(".bookAuthor").eq(i).text(data[i].author)
+                    $(".bookISBN").eq(i).text(data[i].isbn)
+                    $(".bookEdit").eq(i).attr("href","/admin/updateBookPage/"+data[i].id)
+                    $(".bookDelete").eq(i).attr("bookId",data[i].id)
+
+
+
+
+                }
+
+            },
+        })
+    })
+    $(document).on('click', '.page', function () {
+        var pageNow = parseInt($(this).text())
+        var pageNowIndex= parseInt($(this).attr("index"));
+
+        if(pageNow>parseInt($("#pageNow").attr("pageNow"))&&pageNow>4)
+        {
+            for (var i = 7; i >= 0; i--) {
+                $(".page").eq(i).text(parseInt(pageNow+i-4))
+                $(".page").eq(i).show();
+                if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                    $(".page").eq(i).hide();
+            }
+            if($(".page").eq(0).text()<=0){
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(i+1);
+                    $(".page").eq(i).show();
+                }
+            }
+
+            pageNowIndex-=2
+
+        }
+
+        if(pageNow<parseInt($("#pageNow").attr("pageNow")))
+        {
+            for (var i = 7; i >= 0; i--) {
+                $(".page").eq(i).text(parseInt(pageNow+i-4))
+                $(".page").eq(i).show();
+                if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                    $(".page").eq(i).hide();
+            }
+            if($(".page").eq(0).text()<=0){
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(i+1);
+                    $(".page").eq(i).show();
+                }
+            }
+            pageNowIndex+=2
+
+        }
+        for(var i=0;i<8;i++){
+            if(parseInt($(".page").eq(i).text())==pageNow)
+                $(".pageli").eq(i).attr("class","page-item pageli active")
+            else
+                $(".pageli").eq(i).attr("class","page-item pageli")
+        }
+
+
+        $("#pageIndex").attr("pageIndex",pageNowIndex)
+
+        $("#pageNow").attr("pageNow",pageNow)
+
+        var method=$("#method").attr("method")
+
+        $.ajax({
+            url: '/admin/findBooksByPage',
+            type: 'POST', //
+            async: true,    //或false,是否异步
+            data: {
+                pageNow: pageNow,
+                keyWord: keyWord,
+                method:method,
+                orderBy:orderBy,
+            },
+            timeout: 5000,    //超时时间
+            dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            success: function (data) {
+                for(var i=0;i<data.length;i++){
+                    $(".bookTitle").eq(i).text(data[i].title)
+                    $(".bookAuthor").eq(i).text(data[i].author)
+                    $(".bookISBN").eq(i).text(data[i].isbn)
+                    $(".bookEdit").eq(i).attr("href","/admin/updateBookPage/"+data[i].id)
+                    $(".bookDelete").eq(i).attr("bookId",data[i].id)
+                }
+
+            },
+        })
+    })
+
+}
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

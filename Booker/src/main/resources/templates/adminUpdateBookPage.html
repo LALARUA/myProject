@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>adminUpdateBookPage</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri='修改Book')"/>
+            <form method="post" action="/admin/updateBookImage" enctype="multipart/form-data">
+                <img th:src="${bookDetail.imagepath}" style="width:100px;height: 180px;">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="image"style="font-weight: bolder">图片</label>
+                        <input type="hidden" th:value="${bookDetail.imagepath}" name="imagepath">
+                        <input type="hidden" th:value="${bookDetail.id}" name="id">
+                        <input type="hidden" th:value="${bookDetail.title}" name="title">
+                        <input type="hidden" th:value="${bookDetail.author}" name="author">
+                        <input type="hidden" th:value="${bookDetail.summary}" name="summary">
+                        <input type="hidden" th:value="${bookDetail.price}" name="price">
+                        <input type="hidden" th:value="${bookDetail.stock}" name="stock">
+                        <input type="hidden" th:value="${bookDetail.publisher}" name="publisher">
+                        <input type="hidden" th:value="${bookDetail.isbn}" name="isbn">
+                        <input type="hidden" th:value="${bookDetail.tags}" name="tags">
+                        <input type="file" id="image" name="image" required>
+                        <button type="submit"class="btn btn-primary" >修改图片</button>
+                    </div>
+                </div>
+
+            </form>
+            <form action="/admin/updateBook" method="post" enctype="multipart/form-data">
+                <input type="hidden" th:value="${bookDetail.id}" name="id">
+                <input type="hidden" th:value="${bookDetail.imagepath}"name="imagepath">
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="title" style="font-weight: bolder">书名</label>
+                            <input type="text" class="form-control" name="title" id="title"th:value="${bookDetail.title}" th:placeholder="title"required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="author"style="font-weight: bolder">作者</label>
+                            <input type="text" class="form-control" name="author" id="author" th:value="${bookDetail.author}" th:placeholder="author"required>
+                    </div>
+                </div>
+                <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="publisher" style="font-weight: bolder">出版社</label>
+                                <input type="text" class="form-control" id="publisher" name="publisher"th:value="${bookDetail.publisher}" th:placeholder="publisher"required>
+                    </div>
+                    <div class="form-group col-md-2">
+                                <label for="price"style="font-weight: bolder">价格</label>
+                                <input type="text" class="form-control" id="price" name="price" th:value="${bookDetail.publisher}" th:placeholder="price"required>
+                    </div>
+                </div>
+                <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="stock" style="font-weight: bolder">库存</label>
+                                    <input  type="text" class="form-control" id="stock" name="stock"th:value="${bookDetail.publisher}" th:placeholder="stock"required>
+                    </div>
+                    <div class="form-group col-md-2">
+                                    <label for="ISBN"style="font-weight: bolder">ISBN</label>
+                                    <input type="text" class="form-control" id="ISBN" name="isbn" th:value="${bookDetail.isbn}" th:placeholder="ISBN"required>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="ISBN"style="font-weight: bolder">标签</label>
+                        <input type="text" class="form-control" id="tags" name="tags" th:value="${bookDetail.tags}" th:placeholder="tags"required>
+                    </div>
+                </div>
+                <div style="width: 600px;float: left">
+                    <label for="summary" style="font-weight: bolder">简介</label>
+                    <textarea  th:text="${bookDetail.summary}"  th:placeholder="summary" style="height: 300px;float: left" class="form-control"name="summary" id="summary" aria-label="With textarea" required></textarea>
+                    <button type="submit" style="margin-left: 600px" class="btn btn-primary btn-lg" id="submitUpdateBook">submit</button>
+                </div>
+            </form>
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    window.onload=function (ev) {
+        var xiaoshu = /^([0-9]{1,}[.][0-9]*)$/
+        var zhengshu =  /^([0-9]{1,})$/
+        var ISBN = /^\d{3}\d\d{3}\d{5}\d$/
+
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+        $(document).on('click', '#submitUpdateBook', function () {
+            var price = $("#price").val();
+            var isbn = $("#ISBN").val();
+            var stock = $("#stock").val();
+            if (!zhengshu.test(price)&&!xiaoshu.test(price))
+            {
+                alert("请输入正确的价格")
+                return false;
+            }
+            if (!zhengshu.test(stock))
+            {
+                alert("请输入正确的库存")
+                return false;
+            }
+            if (!ISBN.test(isbn))
+            {
+                alert("请输入正确的ISBN")
+                return false;
+            }
+        })
+    }
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

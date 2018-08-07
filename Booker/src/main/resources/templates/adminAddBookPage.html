@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>adminHomepage</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#adminbar(activeUri='添加Book')"/>
+            <form action="/admin/book" method="post" enctype="multipart/form-data">
+            <div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="title" style="font-weight: bolder">书名</label>
+                        <input type="text" class="form-control" name="title" id="title" placeholder="title"required>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="author"style="font-weight: bolder">作者</label>
+                        <input type="text" class="form-control" name="author" id="author" placeholder="author"required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="publisher" style="font-weight: bolder">出版社</label>
+                        <input type="text" class="form-control" id="publisher" name="publisher" placeholder="publisher"required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="price"style="font-weight: bolder">价格</label>
+                        <input type="text" class="form-control" id="price" name="price" placeholder="price"required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="stock" style="font-weight: bolder">库存</label>
+                        <input type="text" class="form-control" id="stock" name="stock" placeholder="stock"required>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="ISBN"style="font-weight: bolder">ISBN</label>
+                        <input type="text" class="form-control" id="ISBN" name="isbn" placeholder="ISBN"required>
+                    </div>
+                </div>
+                <span style="font-weight: bolder">标签</span>
+                <span style="font-weight: bolder;margin-left: 365px">图片</span>
+                <br>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div th:each="tag,tagStat:${tags}" class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" name="bookTags"  th:value="${tag.name}" class="custom-control-input tags " th:id="'bookTag'+${tagStat.count}" >
+                            <label class="custom-control-label" th:for="'bookTag'+${tagStat.count}" th:text="${tag.name}">小说</label>
+                        </div>
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="文学" class="custom-control-input tags " id="bookTag2">-->
+                            <!--<label class="custom-control-label" for="bookTag2">文学</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"  value="艺术" class="custom-control-input tags " id="bookTag3">-->
+                            <!--<label class="custom-control-label" for="bookTag3">艺术</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="青春" class="custom-control-input tags " id="bookTag4">-->
+                            <!--<label class="custom-control-label" for="bookTag4">青春</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"  value="动漫/幽默" class="custom-control-input tags " id="bookTag5">-->
+                            <!--<label class="custom-control-label" for="bookTag5">动漫/幽默</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="励志/成功" class="custom-control-input tags " id="bookTag6">-->
+                            <!--<label class="custom-control-label" for="bookTag6">励志/成功</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="育儿/家教" class="custom-control-input tags " id="bookTag7">-->
+                            <!--<label class="custom-control-label" for="bookTag7">育儿/家教</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="两性" class="custom-control-input tags " id="bookTag8">-->
+                            <!--<label class="custom-control-label" for="bookTag8">两性</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="保健/健身" class="custom-control-input tags " id="bookTag9">-->
+                            <!--<label class="custom-control-label" for="bookTag9">保健/健身</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"value="时尚/美妆" class="custom-control-input tags " id="bookTag10">-->
+                            <!--<label class="custom-control-label" for="bookTag10">时尚/美妆</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="旅游/地图" class="custom-control-input tags " id="bookTag11">-->
+                            <!--<label class="custom-control-label" for="bookTag11">旅游/地图</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="体育/运动" class="custom-control-input tags " id="bookTag12">-->
+                            <!--<label class="custom-control-label" for="bookTag12">体育/运动</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="历史/文化" class="custom-control-input tags " id="bookTag13">-->
+                            <!--<label class="custom-control-label" for="bookTag13">历史/文化</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="政治/军事/法律" class="custom-control-input tags " id="bookTag14">-->
+                            <!--<label class="custom-control-label" for="bookTag14">政治/军事/法律</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="心理" class="custom-control-input tags " id="bookTag15">-->
+                            <!--<label class="custom-control-label" for="bookTag15">心理</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="社会科学" class="custom-control-input tags " id="bookTag16">-->
+                            <!--<label class="custom-control-label" for="bookTag16">社会科学</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"value="经济" class="custom-control-input tags " id="bookTag17">-->
+                            <!--<label class="custom-control-label" for="bookTag17">经济</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="科普/科学" class="custom-control-input tags " id="bookTag18">-->
+                            <!--<label class="custom-control-label" for="bookTag18">科普/科学</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"  value="侦探/悬疑" class="custom-control-input tags " id="bookTag19">-->
+                            <!--<label class="custom-control-label" for="bookTag19">侦探/悬疑</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags"value="医学" class="custom-control-input tags " id="bookTag20">-->
+                            <!--<label class="custom-control-label" for="bookTag20">医学</label>-->
+                        <!--</div>-->
+                        <!--<div class="custom-control custom-checkbox custom-control-inline">-->
+                            <!--<input type="checkbox" name="bookTags" value="计算机" class="custom-control-input tags " id="bookTag21">-->
+                            <!--<label class="custom-control-label" for="bookTag21">计算机</label>-->
+                        <!--</div>-->
+                    </div>
+                    <div class="form-group col-md-4">
+                        <input type="file" name="image" required>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 600px;float: left">
+
+                <label for="summary" style="font-weight: bolder">简介</label>
+                <textarea   placeholder="summary" style="height: 300px;float: left" class="form-control"name="summary" id="summary" aria-label="With textarea" required></textarea>
+                <button type="submit" style="margin-left: 600px" class="btn btn-primary btn-lg" id="submitAddBook">提交Book</button>
+
+            </div>
+                 </form>
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+ window.onload=function (ev) {
+     var xiaoshu = /^([0-9]{1,}[.][0-9]*)$/
+     var zhengshu =  /^([0-9]{1,})$/
+     var ISBN = /^\d{3}\d\d{3}\d{5}\d$/
+     $(document).on('click', '#submit', function () {
+         if ($("#condition").val() == "")
+
+         {
+
+             return false;
+         }
+         else {
+
+             $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+         }
+     })
+     $(document).on('click', '#submitAddBook', function () {
+         var price = $("#price").val();
+         var isbn = $("#ISBN").val();
+         var stock = $("#stock").val();
+         for (var i=0;i<$(".tags").length;i++)
+         {
+             if ($(".tags").eq(i).is(":checked"))
+                 break;
+             if (i==parseInt($(".tags").length-1))
+             {
+                 alert("请选择至少一个标签")
+                 return false
+             }
+         }
+         if (!zhengshu.test(price)&&!xiaoshu.test(price))
+         {
+             alert("请输入正确的价格")
+             return false;
+         }
+         if (!zhengshu.test(stock))
+         {
+             alert("请输入正确的库存")
+             return false;
+         }
+         if (!ISBN.test(isbn))
+         {
+             alert("请输入正确的ISBN")
+             return false;
+         }
+     })
+ }
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

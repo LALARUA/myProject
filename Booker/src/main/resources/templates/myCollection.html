@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myCollection</title>
+
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+
+    <!-- Custom styles for this template -->
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+</head>
+
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div th:replace="bar::#myuserbar(activeUri='我的收藏')"/>
+
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#addNewCollect"
+                >添加收藏夹</button>
+                <a class="btn btn-danger" id="deleteCollection" th:if="${collectionId!=0}"th:href="@{/user/deleteCollection/}+${session.user.id}+'/'+${collectionId}"
+                >删除此收藏夹</a>
+            </div>
+            <div class="modal fade" id="addNewCollect" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">新增收藏夹</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="collectName"></label>
+                                <input type="text" class="form-control" id="collectName" placeholder="收藏夹名字"
+                                       required>
+                                <input type="hidden" th:value="${session.user.id}" id="userId">
+                            </div>
+                        </div>
+                        <div  class="modal-footer">
+                            <button type="button" th:index="0" th:flag=0 id="submitNewCollect" class="btn btn-primary">保存</button>
+                            <button type="button" id="closeModal" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width: 100%">
+                <a type="button" th:href="@{/user/myCollect/}+${session.user.id}+'/'+${collect.id}"  style="margin-right: 20px;"  class="btn btn-danger" th:each="collect,collectStat:${collects}" th:text="${collect.name}"></a>
+            </div>
+            <hr>
+<h1 th:if="${books.size()==0&&collectionId!=0}">此收藏夹无Book</h1>
+<div style="margin-top:20px;width: 100%">
+    <ul>
+        <li style="float: left;margin-bottom:15px;margin-right:30px;list-style: none"
+            th:each="book,bookStat : ${books}">
+            <div class="card" style="width: 12rem;clear: both;overflow: hidden; text-overflow:ellipsis;">
+                <div class="card-header" style="height:40px;">
+                    <h6><p class="bookTitle" data-toggle="tooltip" data-placement="top" th:title="${book.title}"style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;" th:text="${book.title}"></p></h6>
+                </div>
+                <div style="padding:3px 35px;">
+                    <img class="card-img-top bookImage"  th:src="${book.imagepath}" height="130" alt="Card image cap">
+                </div>
+                <div class="card-body">
+                    <span style="font-size: 20px;font-weight: bold">￥</span>
+                    <span style="font-size: 20px;font-weight: bold" class="card-title bookPrice"
+                          th:text="${book.price}">Card title</span>
+                    <h6><a  data-toggle="tooltip" data-placement="top"  th:title="${book.author}" class="bookAuthor card-text btn btn-outline-secondary btn-sm" style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;"
+                            th:href="@{/book/findBooks/ByAuthor/}+${book.author}" >
+                        <span style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;"th:text="${book.author}"></span>
+                    </a></h6>
+                    <div class="btn-group" role="group"  aria-label="Basic example" >
+                        <a th:href="@{/book/bookDetail/}+${book.id}" style="color: white" type="button"
+                           class="btn btn-primary bookDetail">详情</a>
+                        <a th:id="${book.collectDetailId}" style="color: black" type="button"
+                           class="btn btn-light deleteBookInCollect">移出</a>
+                        <button th:id="${book.id}" style="color: white" type="button"
+                                class="btn btn-info addBookInCart">购买</button>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+
+
+        </main>
+
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+<script>
+    window.onload=function (ev) {
+        var userId=$("#userId").val();
+        $(document).on('click', '#submit', function () {
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+
+        $(document).on('click', '.deleteBookInCollect', function () {
+            var collectDetailId = $(this).attr("id");
+
+            $.ajax({
+                url: '/user/deleteBookInCollect',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    collectDetailId:collectDetailId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload();
+                },
+            })
+        })
+        $(document).on('click', '.addBookInCart', function () {
+
+            var bookId = $(this).attr("id")
+            $.ajax({
+                url: '/cart/addBookInCart',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    userId:userId,
+                    bookId:bookId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                },
+            })
+
+        })
+        $(document).on('click', '#submitNewCollect', function () {
+            var collectName=$("#collectName").val()
+            if (collectName=='')
+            {
+                alert("请输入收藏夹名字")
+                return false
+            }
+
+            $.ajax({
+                url: '/user/addNewFavorite',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    userId:userId,
+                    name:collectName,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload();
+                },
+            })
+
+
+        })
+
+
+    }
+
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

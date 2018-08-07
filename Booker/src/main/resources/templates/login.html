@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>Booker</title>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+    <!-- Custom styles for this template -->
+    <link href="/sta/Login/Login.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<div style="width: 368px;margin-left: 550px">
+    <form id="form" class="form-signin" action="/login" method="post">
+
+        <img class="mb-4" src="sta/Booker.png" alt="" width="72" height="72">
+        <h4>[[#{login.slogan}]]</h4>
+        <!--<h1 class="h3 mb-3 font-weight-normal" th:text="#{login.tip}">Please sign in</h1>-->
+
+        <!--<label  class="sr-only" th:text="#{LoginDao.username}">Username</label>-->
+        <input type="email" name="email" id="inputEmail" class="form-control" th:value="${user!=null}?${user.email}"
+               placeholder="用户名" th:placeholder="#{login.username}" required autofocus>
+        <div  class="form-inline">
+            <input type="text" name="verification" id="verify" class="form-control register"
+                   th:placeholder="#{login.verify}">
+            <button type="button" style="align-content: center" class="btn btn-info register" id="getVerify" th:text="#{login.getverify}">验证码</button>
+        </div>
+        <!--<label  class="sr-only" th:text="#{LoginDao.password}">Password</label>-->
+        <!--<input th:placeholder="#{login.password}" type="password" name="password" id="inputPassword" class="form-control"-->
+               <!--th:value="${user!=null}?${user.password}">-->
+       <input th:placeholder="#{login.password}" type="password" name="password" id="inputPassword" class="form-control"
+              th:value="${user!=null}?${user.password}" required>
+        <input type="password" id="sure" class="form-control register" th:value="${user!=null}?${user.password}"
+               th:placeholder="#{login.sure}" placeholder="确认密码" >
+        <input id="flag" type="hidden" name="flag">
+
+        <div style="margin-top: 5px" class="checkbox mb-3">
+            <label>
+                <input type="checkbox" class="rem login" name="remember" value="rem">
+                <span class="rem login" th:text="#{login.remember}"></span>
+            </label>
+            <span id="forget" class="click rem login" style="margin-left: 30px">[[#{login.forget}]]<br></span>
+            <span name="err" id="passerr" style="color: red;font-weight: bold"
+                  th:text="${errorMessage!=null}?${errorMessage.err}"></span>
+        </div>
+        <br class="login">
+
+        <button id="btn" th:flag="${errorMessage!=null}?${errorMessage.flag}:'1'" class="btn btn-lg btn-primary btn-block"
+                type="submit" th:text="#{login.btn}">Sign in
+        </button>
+        <span id="log">[[#{login.noid}]]</span><span class="click" id="in">[[#{login.register}]]</span>
+        <p class="mt-5 mb-3 text-muted">&copy; 2018</p>
+        <a class="btn btn-sm" th:href="@{/(l='zh_CN')}">中文</a>
+        <a class="btn btn-sm" th:href="@{/(l='en_US')}">English</a>
+    </form>
+</div>
+
+
+
+<script>
+    window.onload = function (ev) {
+        var re = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+        var repass = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+
+        if ($("#btn").attr("flag") == '1') {
+
+            button2();
+            // $(document).on('click', '#in', function () {
+            //     $("#passerr").text("");
+            //
+            //     button1();
+            // })
+        }
+        else if($("#btn").attr("flag") == '2'){
+            button1();
+            // $(document).on('click', '#in', function () {
+            //     $("#passerr").text("");
+            //     button2();
+            // })
+        }
+        else if($("#btn").attr("flag") == '3'){
+            button3();
+            // $(document).on('click', '#in', function () {
+            //     $("#passerr").text("");
+            //     button2();
+            // })
+        }
+        $("#inputPassword").val("");
+        $(document).on('keyup blur', '#inputEmail', function () {
+            if ($("#btn").attr("flag") == 1) {
+                $("#passerr").text("");
+                $("#passerr").css("color", "green")
+                return false
+            }
+            else {
+                var email = $("#inputEmail").val();
+                if (re.test(email)){
+                    $.ajax({
+                        url: '/isRegister',
+                        type: 'POST', //
+                        async: true,    //或false,是否异步
+                        data: {
+                            email: email,
+                            flag:$("#btn").attr("flag")
+                        },
+                        timeout: 5000,    //超时时间
+                        dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                        success: function (data) {
+                            var err = data['err']
+                            var color = data['color']
+                            if (!re.test(email)) {
+                                err = "请输入正确的邮箱号"
+                                color = "red"
+                            }
+                            $("#passerr").text(err);
+                            $("#passerr").css("color", color)
+
+                            if( $("#passerr").css("color")=="rgb(255, 0, 0)"){
+                                $("#getVerify").attr("disabled", true)
+                            }
+                            else{
+                                $("#getVerify").attr("disabled", false)
+                            }
+                        },
+                    })
+                }
+                else{
+                    $("#passerr").text("请输入正确的邮箱号");
+                    $("#passerr").css("color", "red");
+                    $("#getVerify").attr("disabled", true)
+                }
+
+            }
+        })
+        $("#getVerify").click(function () {
+            var time = 60;
+            var email = $("#inputEmail").val();
+            $("#passerr").text("")
+            var timer = setInterval(function () {
+                time--;
+                $("#getVerify").text("[[#{login.wait}]]" + time + "秒")
+                $("#getVerify").attr("disabled", true)
+                if (time == 0) {
+                    time = 60;
+                    clearInterval(timer);
+                    $("#getVerify").text("[[#{login.getverify}]]");
+                    $("#getVerify").attr("disabled", false);
+                }
+            }, 1000);
+            $.ajax({
+                url: '/confirmEmail',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    email: email,
+                    flag: $("#btn").attr("flag"),
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    $("#passerr").text(data['err']);
+                    $("#passerr").css("color", "red");
+
+                },
+            })
+
+        })
+        $(document).on('click', '#btn', function () {
+            if (!re.test($("#inputEmail").val())) {
+                $("#passerr").text("请输入正确邮箱号")
+                $("#passerr").css("color", "red");
+                return false;
+            }
+            else if ($("#btn").attr("flag") != 1 && $("#verify").val() == "") {
+                $("#passerr").css("color", "red");
+                $("#passerr").text("请输入验证码");
+                return false
+            }
+            else if (!repass.test($("#inputPassword").val()) && $("#btn").attr("flag") != 1) {
+
+                $("#passerr").css("color", "red");
+
+                $("#passerr").text("请输入8-16位数字与字母组合密码")
+                return false;
+            }
+            else if ($("#btn").attr("flag") != 1 && $("#inputPassword").val() != $("#sure").val()) {
+
+                $("#passerr").text("确认密码错误")
+                $("#passerr").css("color", "red");
+                return false;
+            }
+            else if ($("#passerr").css("color")=="rgb(255, 0, 0)" && !$("#passerr").text() == ""&&!$("#btn").attr("flag") == 1) {return false;}
+        })
+        $(document).on('keyup', '#sure', function () {
+            if ($("#inputPassword").val() != $("#sure").val()) {
+                $("#passerr").text("确认密码错误")
+                $("#passerr").css("color", "red");
+
+            }
+            else {
+                $("#passerr").text("")
+                $("#passerr").css("color", "green");
+            }
+
+        })
+        $(document).on('keyup', '#inputPassword', function () {
+            if ($("#btn").attr("flag") != 1 && !repass.test($("#inputPassword").val())) {
+                $("#passerr").css("color", "red");
+                $("#passerr").text("请输入8-16位数字与字母组合密码")
+            }
+            else {
+                $("#passerr").text("");
+                $("#passerr").css("color", "green");
+            }
+        })
+        $(document).on('click', '#inputPassword', function (){
+        if($("#btn").attr("flag") == 1){
+            var email = $("#inputEmail").val();
+            $.ajax({
+                url: '/getCookieUser',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    email: email,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    if ($("#btn").attr("flag")== 1) {
+                        $("#inputPassword").val(data['password'])
+                    }
+                }
+            })
+        }
+        })
+
+
+        function button1() {
+
+
+            $("#inputPassword").attr("th:placeholder","#{login.password}")
+            $("#btn").attr("flag", '2');
+            $("#flag").val("2");
+            $("#getVerify").attr("disabled", true)
+            $(".register").show();
+            $(".login").hide();
+            $("#form").attr("action", "/register");
+            $("#log").text("[[#{login.haveid}]]");
+            $("#in").text("[[#{login.btn}]]");
+            $("#btn").text("[[#{login.register}]]")
+
+            $(document).on('click', '#in', function () {
+                $("#passerr").text("");
+                button2();
+            })
+            $(document).on('click', '#forget', function () {
+                $("#passerr").text("");
+                button3();
+            })
+        }
+        function button2() {
+
+
+
+            $("#inputPassword").attr("th:placeholder","#{login.password}")
+            $(".register").hide();
+            $(".login").show();
+            $("#btn").attr("flag", '1');
+            $("#flag").val("1");
+            $("#form").attr("action", "/login");
+            $("#log").text("[[#{login.noid}]]");
+            $("#in").text("[[#{login.register}]]");
+            $("#btn").text("[[#{login.btn}]]")
+
+            $(document).on('click', '#in', function () {
+                $("#passerr").text("");
+
+                $("#inputPassword").val("");
+
+                $("#sure").val("");
+                button1();
+            })
+            $(document).on('click', '#forget', function () {
+                $("#passerr").text("");
+
+                $("#inputPassword").val("");
+
+                $("#sure").val("");
+                button3();
+            })
+        }
+        function button3() {
+
+
+            $("#inputPassword").attr("th:placeholder","#{newpassword}")
+            $(".register").show();
+            $("#getVerify").attr("disabled", true)
+            $(".login").hide();
+            $("#btn").attr("flag", '3');
+            $("#flag").val("3");
+            $("#form").attr("action", "/register");
+            $("#log").text("[[#{login.haveid}]]");
+            $("#in").text("[[#{login.btn}]]");
+            $("#btn").text("[[#{login.updatepassword}]]")
+            $(document).on('click', '#in', function () {
+                $("#passerr").text("");
+                $("#inputPassword").val("");
+
+                $("#sure").val("");
+                button2();
+            })
+        }
+    }
+</script>
+</body>
+</html>

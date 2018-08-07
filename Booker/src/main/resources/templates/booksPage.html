@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <title>myUser</title>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/sta/jquery-3.3.1/jquery-3.3.1/jquery-3.3.1.js"></script>
+    p core CSS
+    <!-- Bootstrap core CSS -->
+    <link href="/sta/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" href="/resources/favicon.ico" mce_href="/resources/favicon.ico" type="image/x-icon">
+    <!-- Custom styles for this template -->
+    <link href="/sta/dashboardpro.css" rel="stylesheet">
+    <style type="text/css">
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <script src="//at.alicdn.com/t/font_692356_l8d6tmld64bfn7b9.js"></script>
+</head>
+<body>
+<div th:replace="~{bar::topbar}"></div>
+
+<div id="a" class="container-fluid">
+    <div class="row">
+        <div th:replace="bar::#sidebar(activeUri='main')"/>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <div>
+                <h1 style="display: inline-block" id="title" class="h2">[[${keyWord}]]</h1>
+                    <a type="button" class="btn btn-danger" th:href="@{/book/findBooks/}+${method}+'/'+${keyWord}+'/sales'">按销量排序</a>
+                    <a  type="button" class="btn btn-primary" th:href="@{/book/findBooks/}+${method}+'/'+${keyWord}+'/putaway'">按上架时间排序</a>
+
+                </div>
+                 <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group mr-2">
+                        <button class="btn btn-sm btn-outline-secondary">Share</button>
+                        <button class="btn btn-sm btn-outline-secondary">Export</button>
+                    </div>
+                    <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+                        <span data-feather="calendar"></span>
+                        购物车
+                    </a>
+                </div>
+            </div>
+
+            <div   style="width: 100%">
+                <!--<input type="hidden" id="keyWord" th:keyWord="$()">-->
+                <input type="hidden" id="userId" th:value="${session.user!=null}?${session.user.id}">
+                <input type="hidden" id="pageNum" th:pageNum="${pageNum}">
+                <input type="hidden" id="pageNow" th:pageNow=1>
+                <input type="hidden" id="pageIndex" th:pageIndex=0>
+                <input type="hidden" id="orderBy" th:orderBy="${orderBy}">
+                <input type="hidden" id="method" th:method="${method}" >
+                <h1 th:if="${books.size()==0}">查询无结果</h1>
+
+                <ul>
+                    <li class="books" style="float: left;margin-bottom:15px;margin-right:30px;list-style: none"
+                        th:each="book,bookStat : ${books}">
+                        <div class="card" style="width: 12rem;clear: both;overflow: hidden; text-overflow:ellipsis;">
+                            <div class="card-header" style="height:40px;">
+                                <h6><p class="bookTitle" data-toggle="tooltip" data-placement="top" th:title="${book.title}"style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;" th:text="${book.title}"></p></h6>
+                            </div>
+                            <div style="padding:3px 35px;">
+                                <img class="card-img-top bookImage"  th:src="${book.imagepath}" height="130" alt="Card image cap">
+                            </div>
+                            <div class="card-body">
+                                <span style="font-size: 20px;font-weight: bold">￥</span>
+                                <span style="font-size: 20px;font-weight: bold" class="card-title bookPrice"
+                                      th:text="${book.price}">Card title</span>
+                                <h6><a  data-toggle="tooltip" data-placement="top"  th:title="${book.author}" class="bookAuthor card-text btn btn-outline-secondary btn-sm" style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;"
+                                       th:href="@{/book/findBooks/ByAuthor/}+${book.author}+'/id'" >
+                                    <span style="overflow: hidden;white-space: nowrap; text-overflow:ellipsis;"th:text="${book.author}"></span>
+                                    </a></h6>
+                                <div class="btn-group" role="group"  aria-label="Basic example" >
+                                    <a target="_blank" th:href="@{/book/bookDetail/}+${book.id}" style="color: white" type="button"
+                                       class="btn btn-primary bookDetail">详情</a>
+                                    <a th:bookId="${book.id}" style="color: black" type="button"
+                                       class="btn btn-light addBookInCollection" data-toggle="modal" data-target="#addNewCollectDetail">收藏</a>
+                                    <button th:id="${book.id}" style="color: white" type="button"
+                                       class="btn btn-info addBookInCart">购买</button>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal fade" id="addNewCollectDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">选择收藏夹</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="collectDetailBookId">
+                            <button type="button" th:collectId="${collect.id}"  style="margin-right: 20px;"  class="btn btn-danger collection" th:each="collect,collectStat:${collects}" th:text="${collect.name}"></button>
+                            <hr>
+                            <button class="btn btn-primary" data-toggle="collapse" href="#collectName" role="button" aria-expanded="false" aria-controls="collapseExample">新添收藏夹</button>
+
+                            <input type="text"  class="form-control collapse" id="collectName" placeholder="收藏夹名字"
+                                   required>
+
+                            <div  class="modal-footer">
+                                <button type="button" th:index="0" th:flag=0 id="submitNewCollect" class="btn btn-primary">保存</button>
+                                <button type="button" id="closeModal" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav  th:if="${pageNum>1}" style="margin-left:400px;clear: both" aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" id="previous" href="#">Previous</a>
+                    </li>
+
+                    <li class="page-item">
+                        <button class="page-link " id="pagePrevious" href="" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+
+                        </button>
+                    </li>
+                    <li class="page-item pageli" th:each="page,pageStat:${#numbers.sequence(1,pageNum>8?8:pageNum)}"><a
+                            class="page-link page active" th:index="${pageStat.index}" href="#" th:text="${pageStat.count}"></a></li>
+                    <li class="page-item">
+                        <button id="pageNext" class="page-link " href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only" >Next</span>
+                        </button>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"id="next" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
+        </main>
+    </div>
+</div>
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+<script>
+    window.onload = function (ev) {
+
+        var userId=$("#userId").val();
+        $(document).on('click', '.addBookInCollection', function () {
+            var bookId = $(this).attr("bookId")
+            $("#collectDetailBookId").val(bookId)
+        })
+        $(document).on('click', '.collection', function () {
+            var bookId = $("#collectDetailBookId").val()
+            var collectionId = $(this).attr("collectId")
+            $.ajax({
+                url: '/user/addBookInCollection',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    collectId:collectionId,
+                    bookId:bookId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                },
+            })
+
+        })
+        $(document).on('click', '#submitNewCollect', function () {
+
+            var bookId = $("#collectDetailBookId").val()
+            var collectionName = $("#collectName").val()
+            if (collectionName=='')
+            {
+                alert("请输入收藏夹名字")
+                return false;
+            }
+            $.ajax({
+                url: '/user/addNewCollectionAndBook',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    name:collectionName,
+                    userId:userId,
+                    bookId:bookId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                    location.reload()
+                },
+            })
+
+        })
+        // $(document).on('click', '.bookInCart', function () {
+        //
+        //     var bookId=$(this).attr("id");
+        //     $.ajax({
+        //         url: '/user/myCart/',
+        //         type: 'POST', //
+        //         async: true,    //或false,是否异步
+        //         data: {
+        //             bookId:bookId,
+        //         },
+        //         timeout: 5000,    //超时时间
+        //         dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        //         success: function (data) {
+        //             alert(data['info'])
+        //
+        //         },
+        //     })
+        //
+        // })
+
+        $(document).on('click', '#submit', function () {
+
+            if ($("#condition").val() == "")
+
+            {
+
+                return false;
+            }
+            else {
+
+                $("#searchBooks").attr("action", "/book/findBooks/BySearch/" + $("#condition").val()+"/id")
+            }
+        })
+        $(".pageli").eq(0).attr("class","page-item pageli active")
+
+
+
+
+
+        $(document).on('click', '#pagePrevious', function () {
+            if (parseInt($(".page").eq(0).text()) <= 1)
+                return false
+            else {
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(parseInt($(".page").eq(i).text()) - 8);
+                    $(".page").eq(i).show();
+                }
+                if($(".page").eq(0).text()<=0){
+                    for (var i = 0; i <= 8; i++) {
+                        $(".page").eq(i).text(i+1);
+                        $(".page").eq(i).show();
+                    }
+                }
+                for(var i=0;i<8;i++){
+                    if ($(".page").eq(i).text()==$("#pageNow").attr("pageNow"))
+                        $(".pageli").eq(i).attr("class","page-item pageli active")
+                    else
+                        $(".pageli").eq(i).attr("class","page-item pageli")
+                }
+            }
+
+        })
+        $(document).on('click', '.addBookInCart', function () {
+            var bookId = $(this).attr("id")
+            $.ajax({
+                url: '/cart/addBookInCart',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    userId:userId,
+                    bookId:bookId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    alert(data['info'])
+                },
+            })
+
+        })
+        $(document).on('click', '#pageNext', function () {
+            for(var i=0;i<8;i++){
+                if (parseInt($(".page").eq(i).text()) >= parseInt($("#pageNum").attr("pageNum")))
+                    return false
+            }
+
+
+            {
+                for (var i = 0; i < 8; i++) {
+                    $(".page").eq(i).text(parseInt($(".page").eq(i).text()) + 8);
+                    if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                        $(".page").eq(i).hide();
+                }
+                for(var i=0;i<8;i++){
+                    if ($(".page").eq(i).text()==$("#pageNow").attr("pageNow"))
+                        $(".pageli").eq(i).attr("class","page-item pageli active")
+                    else
+                        $(".pageli").eq(i).attr("class","page-item pageli")
+                }
+
+            }
+
+        })
+        $(document).on('click', '#previous', function () {
+            if($("#pageNow").attr("pageNow")==1)
+                return false
+
+
+            var pageNow =parseInt( $("#pageNow").attr("pageNow"))-1
+
+            var pageIndex = parseInt($("#pageIndex").attr("pageIndex"))-1
+            for (var i = 7; i >= 0; i--) {
+                $(".page").eq(i).text(parseInt(pageNow+i-4))
+                $(".page").eq(i).show();
+                if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                    $(".page").eq(i).hide();
+            }
+            if($(".page").eq(0).text()<=0){
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(i+1);
+                    $(".page").eq(i).show();
+                }
+            }
+            for(var i=0;i<8;i++){
+                if(parseInt($(".page").eq(i).text())==pageNow)
+                    $(".pageli").eq(i).attr("class","page-item pageli active")
+                else
+                    $(".pageli").eq(i).attr("class","page-item pageli")
+            }
+            var keyWord=$("#title").text()
+            $("#pageIndex").attr("pageIndex",pageIndex)
+            $("#pageNow").attr("pageNow",pageNow)
+            var method=$("#method").attr("method")
+            var orderBy = $("#orderBy").attr("orderBy")
+
+            $.ajax({
+                url: '/book/findBooksByPage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    pageNow: pageNow,
+                    keyWord: keyWord,
+                    method:method,
+                    orderBy:orderBy,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    for (var  i = 0;i<15;i++){
+                        $(".books").eq(i).show()
+                    }
+                    for(var i=0;i<data.length;i++){
+                        $(".bookTitle").eq(i).text(data[i].title)
+                        $(".bookAuthor").eq(i).text(data[i].author)
+                        $(".bookAuthor").eq(i).attr("href","/book/findBooks/ByAuthor"+data[i].author)
+                        $(".bookDetail").eq(i).attr("href","/book/bookDetail/"+data[i].id)
+                        $(".bookImage").eq(i).attr("src",data[i].imagepath)
+                        $(".bookInCart").eq(i).attr("id",data[i].id)
+                        $(".bookPrice").eq(i).text(data[i].price)
+                    }
+                    for (var  i = data.length;i<15;i++){
+                        $(".books").eq(i).hide()
+                    }
+
+
+                },
+            })
+        })
+        $(document).on('click', '#next', function () {
+            if($("#pageNow").attr("pageNow")==$("#pageNum").attr("pageNum"))
+                return false
+
+
+            var pageNow =parseInt($("#pageNow").attr("pageNow"))+1
+
+            var pageIndex = parseInt($("#pageIndex").attr("pageIndex"))+1
+
+
+            for (var i = 7; i >= 0; i--) {
+                $(".page").eq(i).text(parseInt(pageNow+i-4))
+                $(".page").eq(i).show();
+                if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                    $(".page").eq(i).hide();
+            }
+            if($(".page").eq(0).text()<=0){
+                for (var i = 0; i <= 8; i++) {
+                    $(".page").eq(i).text(i+1);
+                    $(".page").eq(i).show();
+                }
+            }
+            for(var i=0;i<8;i++){
+                if(parseInt($(".page").eq(i).text())==pageNow)
+                    $(".pageli").eq(i).attr("class","page-item pageli active")
+                else
+                    $(".pageli").eq(i).attr("class","page-item pageli")
+            }
+            var keyWord=$("#title").text()
+            $("#pageIndex").attr("pageIndex",pageIndex)
+            $("#pageNow").attr("pageNow",pageNow)
+            var method=$("#method").attr("method")
+            var orderBy = $("#orderBy").attr("orderBy")
+            $.ajax({
+                url: '/book/findBooksByPage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    pageNow: pageNow,
+                    keyWord: keyWord,
+                    method:method,
+                    orderBy:orderBy
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    for (var  i = 0;i<15;i++){
+                        $(".books").eq(i).show()
+                    }
+                    for(var i=0;i<data.length;i++){
+                        $(".bookTitle").eq(i).text(data[i].title)
+                        $(".bookAuthor").eq(i).text(data[i].author)
+                        $(".bookAuthor").eq(i).attr("href","/book/findBooks/ByAuthor"+data[i].author)
+                        $(".bookDetail").eq(i).attr("href","/book/bookDetail/"+data[i].id)
+                        $(".bookImage").eq(i).attr("src",data[i].imagepath)
+                        $(".bookInCart").eq(i).attr("id",data[i].id)
+                        $(".bookPrice").eq(i).text(data[i].price)
+                    }
+                    for (var  i = data.length;i<15;i++){
+                        $(".books").eq(i).hide()
+                    }
+
+
+                },
+            })
+        })
+        $(document).on('click', '.page', function () {
+            var pageNow = parseInt($(this).text())
+            var pageNowIndex= parseInt($(this).attr("index"));
+
+            if(pageNow>parseInt($("#pageNow").attr("pageNow"))&&pageNow>4)
+            {
+                for (var i = 7; i >= 0; i--) {
+                    $(".page").eq(i).text(parseInt(pageNow+i-4))
+                    $(".page").eq(i).show();
+                    if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                        $(".page").eq(i).hide();
+                }
+                if($(".page").eq(0).text()<=0){
+                    for (var i = 0; i <= 8; i++) {
+                        $(".page").eq(i).text(i+1);
+                        $(".page").eq(i).show();
+                    }
+                }
+
+                pageNowIndex-=2
+
+            }
+
+            if(pageNow<parseInt($("#pageNow").attr("pageNow")))
+            {
+                for (var i = 7; i >= 0; i--) {
+                    $(".page").eq(i).text(parseInt(pageNow+i-4))
+                    $(".page").eq(i).show();
+                    if (parseInt($(".page").eq(i).text()) > parseInt($("#pageNum").attr("pageNum")))
+                        $(".page").eq(i).hide();
+                }
+                if($(".page").eq(0).text()<=0){
+                    for (var i = 0; i <= 8; i++) {
+                        $(".page").eq(i).text(i+1);
+                        $(".page").eq(i).show();
+                    }
+                }
+                pageNowIndex+=2
+
+            }
+            for(var i=0;i<8;i++){
+                if(parseInt($(".page").eq(i).text())==pageNow)
+                    $(".pageli").eq(i).attr("class","page-item pageli active")
+                else
+                $(".pageli").eq(i).attr("class","page-item pageli")
+            }
+
+
+            $("#pageIndex").attr("pageIndex",pageNowIndex)
+
+            $("#pageNow").attr("pageNow",pageNow)
+
+            var orderBy = $("#orderBy").attr("orderBy")
+          var keyWord=$("#title").text()
+            var method=$("#method").attr("method")
+            $.ajax({
+                url: '/book/findBooksByPage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    pageNow: pageNow,
+                    keyWord: keyWord,
+                    method:method,
+                    orderBy:orderBy
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+                    for (var  i = 0;i<15;i++){
+                        $(".books").eq(i).show()
+                    }
+                    for(var i=0;i<data.length;i++){
+                        $(".bookTitle").eq(i).text(data[i].title)
+                        $(".bookAuthor").eq(i).text(data[i].author)
+                        $(".bookAuthor").eq(i).attr("href","/book/findBooks/ByAuthor"+data[i].author)
+                        $(".bookDetail").eq(i).attr("href","/book/bookDetail/"+data[i].id)
+                        $(".bookImage").eq(i).attr("src",data[i].imagepath)
+                        $(".bookInCart").eq(i).attr("id",data[i].id)
+                        $(".bookPrice").eq(i).text(data[i].price)
+                    }
+                    for (var  i = data.length;i<15;i++){
+                        $(".books").eq(i).hide()
+                    }
+
+                },
+            })
+        })
+
+    }
+
+</script>
+<script src="/sta/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
