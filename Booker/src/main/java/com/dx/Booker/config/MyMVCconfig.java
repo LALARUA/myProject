@@ -14,11 +14,17 @@ public class MyMVCconfig implements WebMvcConfigurer {
         WebMvcConfigurer webMvcConfigurer = new WebMvcConfigurer() {
             @Override
             public void addViewControllers(ViewControllerRegistry registry) {
+
                 }
 
         };
         return webMvcConfigurer;
     }
+
+
+
+
+
 
     @Bean
     public LocaleResolver localeResolver() {

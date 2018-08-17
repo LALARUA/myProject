@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @MapperScan("com.dx.Booker.generator.mapper")
 public class BookerApplication
-		extends SpringBootServletInitializer
+//		extends SpringBootServletInitializer
 {
-	@Override
-	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(BookerApplication.class);
-	}
+//	@Override
+//	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//		return builder.sources(BookerApplication.class);
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(BookerApplication.class, args);

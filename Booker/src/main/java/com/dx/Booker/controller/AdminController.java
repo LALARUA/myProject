@@ -1,10 +1,7 @@
 package com.dx.Booker.controller;
 
 import com.dx.Booker.generator.extendPojo.*;
-import com.dx.Booker.generator.po.Books;
-import com.dx.Booker.generator.po.Comment;
-import com.dx.Booker.generator.po.Order;
-import com.dx.Booker.generator.po.tag;
+import com.dx.Booker.generator.po.*;
 import com.dx.Booker.serviceinterface.AdminService;
 import com.dx.Booker.serviceinterface.BookService;
 import net.sf.json.JSONArray;
@@ -16,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.util.*;
@@ -324,6 +322,15 @@ public class AdminController {
         model.addAttribute("bookDetail", bookDetail);
 
         return "adminUpdateBookPage";
+    }
+
+    @RequestMapping("/updateDynamicInformation")
+    public String updateDynamicInformation(DynamicInformation dynamicInformation, Model model, HttpServletRequest httpServletRequest){
+
+
+
+
+        return "adminHomepage";
     }
 
 
