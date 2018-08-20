@@ -4,6 +4,7 @@ package com.dx.Booker;
 
 
 import com.dx.Booker.generator.extendPojo.allTags;
+import com.dx.Booker.generator.extendPojo.commentAndSupport;
 import com.dx.Booker.generator.mapper.*;
 
 
@@ -45,12 +46,15 @@ public class BookerApplicationTests {
 	@Autowired
 	private DataSource dataSource;
 
+	@Autowired
+	private CommentMapper commentMapper;
+
 
     @Test
 	public void contextLoads() throws Exception{
-		System.out.println(dataSource.getConnection());
+		List<commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(171);
 
-
+		System.out.println("pause");
 
 
 //		List<Books> books = booksMapper.selectAllBooks();

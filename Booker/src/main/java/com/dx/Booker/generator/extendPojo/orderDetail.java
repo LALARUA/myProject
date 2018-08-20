@@ -5,8 +5,6 @@ import com.dx.Booker.generator.po.Orderdetail;
 
 public class orderDetail extends Orderdetail {
     Books book;
-
-
     public Books getBook() {
         return book;
     }

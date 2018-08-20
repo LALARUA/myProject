@@ -2,7 +2,10 @@ package com.dx.Booker.generator.extendPojo;
 
 import com.dx.Booker.generator.po.Comment;
 import com.dx.Booker.generator.po.User;
+import com.dx.Booker.generator.po.reply;
 import org.apache.ibatis.annotations.Insert;
+
+import java.util.ArrayList;
 
 public class commentAndSupport extends Comment {
     private User user;                  //评论user信息
@@ -11,6 +14,23 @@ public class commentAndSupport extends Comment {
     private Integer userBrowseId;       //浏览者userId
     private String userBrowseName;      //浏览者userName
 
+    private ArrayList<reply> replies;   //该评论的回复
+
+    public ArrayList<reply> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(ArrayList<reply> replies) {
+        this.replies = replies;
+    }
+
+    public String getUserBrowseName() {
+        return userBrowseName;
+    }
+
+    public void setUserBrowseName(String userBrowseName) {
+        this.userBrowseName = userBrowseName;
+    }
 
     public Integer getUserBrowseId() {
         return userBrowseId;

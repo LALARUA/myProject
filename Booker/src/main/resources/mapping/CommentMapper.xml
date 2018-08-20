@@ -18,11 +18,87 @@
       <result column="username" jdbcType="VARCHAR" property="username" />
       <result column="icon" jdbcType="VARCHAR" property="icon" />
     </association>
+    <collection property="replies" ofType="com.dx.Booker.generator.po.reply">
+    <id column="replyId" jdbcType="INTEGER" property="id"/>
+    <result column="id" jdbcType="INTEGER" property="commentId"/>
+    <result column="replyFromUserId" jdbcType="INTEGER" property="fromUserId"/>
+    <result column="replyToUserId" jdbcType="INTEGER" property="toUserId"/>
+    <result column="replyDetail" jdbcType="VARCHAR" property="detail"/>
+    <result column="replyDatetime" jdbcType="TIMESTAMP" property="datetime" />
+    <result column="replyFromUserName" jdbcType="VARCHAR" property="fromUserName"/>
+    <result column="replyToUserName" jdbcType="VARCHAR" property="toUserName"/>
+
+    </collection>
+
   </resultMap>
   <select id="commentsOfBook" parameterType="java.lang.Integer" resultMap="commentsOfBook">
-   select `comment`.id AS id,`user`.username AS username,`user`.icon AS icon, `user`.id AS userId,`comment`.detail AS detail,`comment`.date as
-date from `user`,`comment` WHERE `comment`.userId=`user`.id AND `comment`.bookId=#{bookId}
+  SELECT
+	`comment`.id AS id,
+	`user`.username AS username,
+	`user`.icon AS icon,
+	`user`.id AS userId,
+	`comment`.detail AS detail,
+	`comment`.date AS date,
+	reply.id AS replyId,
+	reply.fromUserId AS replyFromUserId,
+	reply.toUserId AS replyToUserId,
+	reply.datetime AS replyDatetime,
+	reply.detail AS replyDetail,
+(SELECT username FROM `user` WHERE id = reply.fromUserId) AS replyFromUserName,
+(SELECT username FROM `user` WHERE id = reply.toUserId) AS replytoUserName
+FROM
+	`comment`
+LEFT JOIN `user` ON `comment`.userId = `user`.id
+LEFT JOIN reply ON `comment`.id = reply.commentId
+WHERE
+	`comment`.bookId = #{bookId}
   </select>
+  <!--<resultMap id="commentsOfBook" type="com.dx.Booker.generator.extendPojo.commentAndSupport">-->
+    <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+    <!--<result column="userId" jdbcType="INTEGER" property="userId" />-->
+    <!--<result column="detail" jdbcType="VARCHAR" property="detail" />-->
+    <!--<result column="date" jdbcType="TIMESTAMP" property="date" />-->
+    <!--<association property="user" javaType="com.dx.Booker.generator.po.User">-->
+      <!--<id column="userId" jdbcType="INTEGER" property="id" />-->
+      <!--<result column="username" jdbcType="VARCHAR" property="username" />-->
+      <!--<result column="icon" jdbcType="VARCHAR" property="icon" />-->
+    <!--</association>-->
+    <!--<collection property="replies" ofType="com.dx.Booker.generator.po.reply">-->
+      <!--<id column="replyId" jdbcType="INTEGER" property="id"/>-->
+      <!--<result column="id" jdbcType="INTEGER" property="commentId"/>-->
+      <!--<result column="replyFromUserId" jdbcType="INTEGER" property="fromUserId"/>-->
+      <!--<result column="replyToUserId" jdbcType="INTEGER" property="toUserId"/>-->
+      <!--<result column="replyDetail" jdbcType="VARCHAR" property="detail"/>-->
+      <!--<result column="replyDatetime" jdbcType="TIMESTAMP" property="datetime" />-->
+      <!--<result column="replyFromUserName" jdbcType="VARCHAR" property="fromUserName"/>-->
+      <!--<result column="replyToUserName" jdbcType="VARCHAR" property="toUserName"/>-->
+
+    <!--</collection>-->
+  <!--</resultMap>-->
+  <!--<select id="commentsOfBook" parameterType="java.lang.Integer" resultMap="commentsOfBook">-->
+<!--&#45;&#45;    select `comment`.id AS id,`user`.username AS username,`user`.icon AS icon, `user`.id AS userId,`comment`.detail AS detail,`comment`.date as-->
+<!--&#45;&#45; date from `user`,`comment` WHERE `comment`.userId=`user`.id AND `comment`.bookId=#{bookId}-->
+<!--SELECT-->
+	<!--`comment`.id AS id,-->
+	<!--`user`.username AS username,-->
+	<!--`user`.icon AS icon,-->
+	<!--`user`.id AS userId,-->
+	<!--`comment`.detail AS detail,-->
+	<!--`comment`.date AS date,-->
+	<!--reply.id AS replyId,-->
+	<!--reply.fromUserId AS replyFromUserId,-->
+	<!--reply.toUserId AS replyToUserId,-->
+	<!--reply.datetime AS replyDatetime,-->
+	<!--reply.detail AS replyDetail,-->
+<!--(SELECT username FROM `user` WHERE id = reply.fromUserId) AS replyFromUserName,-->
+<!--(SELECT username FROM `user` WHERE id = reply.toUserId) AS replytoUserName-->
+<!--FROM-->
+	<!--`comment`-->
+<!--LEFT JOIN `user` ON `comment`.userId = `user`.id-->
+<!--LEFT JOIN reply ON `comment`.id = reply.commentId-->
+<!--WHERE-->
+	<!--`comment`.bookId = #{bookId}-->
+  <!--</select>-->
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
