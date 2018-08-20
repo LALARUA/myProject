@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadPoolExecutor;
+
 /**
  * @description shiroRealm配置
  * @author xiangXX
@@ -36,8 +38,6 @@ public class ShiroRealm extends AuthorizingRealm {
             roles.add("admin");
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo(roles);
         return simpleAuthorizationInfo;
-
-
     }
 
 

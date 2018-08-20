@@ -36,7 +36,6 @@
         <div th:replace="bar::#sidebar(activeUri='main')"/>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div th:replace="bar::#adminbar(activeUri='管理员首页')"/>
-
             <form action="/admin/updateDynamicInformation" method="post">
                 <input name="title">
                 <input name="detail">
