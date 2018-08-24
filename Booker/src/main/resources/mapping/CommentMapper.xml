@@ -27,12 +27,14 @@
     <result column="replyDatetime" jdbcType="TIMESTAMP" property="datetime" />
     <result column="replyFromUserName" jdbcType="VARCHAR" property="fromUserName"/>
     <result column="replyToUserName" jdbcType="VARCHAR" property="toUserName"/>
+      <result column="replySupportConut" jdbcType="VARCHAR" property="toUserName"/>
 
     </collection>
 
   </resultMap>
-  <select id="commentsOfBook" parameterType="java.lang.Integer" resultMap="commentsOfBook">
-  SELECT
+  <select id="commentsOfBook" parameterType="java.util.HashMap" resultMap="commentsOfBook">
+
+ SELECT
 	`comment`.id AS id,
 	`user`.username AS username,
 	`user`.icon AS icon,
@@ -44,6 +46,8 @@
 	reply.toUserId AS replyToUserId,
 	reply.datetime AS replyDatetime,
 	reply.detail AS replyDetail,
+(SELECT COUNT(*) FROM replySupport  WHERE replySupport.replyId = reply.id) AS replySupportConut,
+(SELECT COUNT(*) FROM replySupport  WHERE replySupport.replyId = reply.id AND replySupport.userId=#{currentUserId}) AS currentUserIsSupport,
 (SELECT username FROM `user` WHERE id = reply.fromUserId) AS replyFromUserName,
 (SELECT username FROM `user` WHERE id = reply.toUserId) AS replytoUserName
 FROM
@@ -52,6 +56,27 @@ LEFT JOIN `user` ON `comment`.userId = `user`.id
 LEFT JOIN reply ON `comment`.id = reply.commentId
 WHERE
 	`comment`.bookId = #{bookId}
+
+--   SELECT
+-- 	`comment`.id AS id,
+-- 	`user`.username AS username,
+-- 	`user`.icon AS icon,
+-- 	`user`.id AS userId,
+-- 	`comment`.detail AS detail,
+-- 	`comment`.date AS date,
+-- 	reply.id AS replyId,
+-- 	reply.fromUserId AS replyFromUserId,
+-- 	reply.toUserId AS replyToUserId,
+-- 	reply.datetime AS replyDatetime,
+-- 	reply.detail AS replyDetail,
+-- (SELECT username FROM `user` WHERE id = reply.fromUserId) AS replyFromUserName,
+-- (SELECT username FROM `user` WHERE id = reply.toUserId) AS replytoUserName
+-- FROM
+-- 	`comment`
+-- LEFT JOIN `user` ON `comment`.userId = `user`.id
+-- LEFT JOIN reply ON `comment`.id = reply.commentId
+-- WHERE
+-- 	`comment`.bookId = #{bookId}
   </select>
   <!--<resultMap id="commentsOfBook" type="com.dx.Booker.generator.extendPojo.commentAndSupport">-->
     <!--<id column="id" jdbcType="INTEGER" property="id" />-->

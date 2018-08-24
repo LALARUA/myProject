@@ -3,6 +3,8 @@ package com.dx.Booker.generator.mapper;
 import com.dx.Booker.generator.extendPojo.commentAndSupport;
 import com.dx.Booker.generator.po.Comment;
 import com.dx.Booker.generator.po.CommentExample;
+
+import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -11,7 +13,7 @@ public interface CommentMapper {
     @Select("select * from comment where bookId=#{bookId} and userId = #{userId}")
     public Comment userCommentInBook(Comment comment);
 
-    List<commentAndSupport> commentsOfBook(Integer bookId);
+    List<commentAndSupport> commentsOfBook(HashMap hashMap);
 
 
     long countByExample(CommentExample example);

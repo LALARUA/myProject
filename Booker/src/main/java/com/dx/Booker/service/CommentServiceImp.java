@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -84,7 +85,10 @@ public class CommentServiceImp implements CommentSevice {
      *
      */
     public List<commentAndSupport> selectCommentAndSupport(Integer bookId,Integer userId) {
-        List<com.dx.Booker.generator.extendPojo.commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(bookId);
+        HashMap<String, Integer> hs = new HashMap<>();
+        hs.put("bookId",bookId);
+        hs.put("currentUser",userId);
+        List<com.dx.Booker.generator.extendPojo.commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(hs);
         for (commentAndSupport commentAndSupport:commentAndSupports
              ) {commentAndSupport.setUserBrowseId(userId);
             Date date = commentAndSupport.getDate();

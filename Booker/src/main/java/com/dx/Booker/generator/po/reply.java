@@ -11,6 +11,24 @@ public class reply {
     private Date datetime;
     private String fromUserName;
     private String toUserName;
+    private Integer support;
+    private Integer currentUserIsSupport;
+
+    public Integer getSupport() {
+        return support;
+    }
+
+    public void setSupport(Integer support) {
+        this.support = support;
+    }
+
+    public Integer getCurrentUserIsSupport() {
+        return currentUserIsSupport;
+    }
+
+    public void setCurrentUserIsSupport(Integer currentUserIsSupport) {
+        this.currentUserIsSupport = currentUserIsSupport;
+    }
 
     public String getFromUserName() {
         return fromUserName;

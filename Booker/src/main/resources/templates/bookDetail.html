@@ -143,7 +143,8 @@
             <h2 style="clear: both" th:if="${commentAndSupports.size()==0}"><span class="badge badge-danger">暂无评论</span></h2>
             <div class="list-group" style="clear: both">
                 <div class="list-group-item list-group-item-action flex-column align-items-start"
-                th:each="commentAndSupport,commentAndSupportStat:${commentAndSupports}">
+                th:each="commentAndSupport,commentAndSupportStat:${commentAndSupports}" data-toggle="collapse"th:href="@{#collapseExample}+${commentAndSupportStat.index}"
+                     role="button" aria-expanded="false" aria-controls="collapseExample">
                     <div class="d-flex w-100 justify-content-between">
 
                         <h6 class="mb-1"><span data-feather="user"></span><span style="font-weight: bold"th:text="${commentAndSupport.user.username}">用户</span></h6>
@@ -165,9 +166,15 @@
                                 <span data-feather="thumbs-up" ></span><span th:text="${commentAndSupport.commentSupports}" class="supportNumber">点赞数</span>
                             </button>
                         </div>
-
+                    </div>
+                    <div style="clear: both" class="collapse" th:id="collapseExample+${commentAndSupportStat.index}">
+                        <tr th:each="reply,replyStat:${commentAndSupport.replies}">
+                            <td th:text="${reply.detail}"></td>
+                        </tr>
 
                     </div>
+
+
                 </div>
 
             </div>
