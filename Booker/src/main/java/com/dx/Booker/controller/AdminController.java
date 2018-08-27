@@ -325,7 +325,13 @@ public class AdminController {
     }
 
     @RequestMapping("/updateDynamicInformation")
-    public String updateDynamicInformation(DynamicInformations dynamicInformations, Model model, HttpServletRequest httpServletRequest){
+    public String updateDynamicInformation(DynamicInformations dynamicInformations,
+                                           Model model, HttpServletRequest httpServletRequest){
+
+
+
+
+
 
 
 

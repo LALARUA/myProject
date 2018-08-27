@@ -4,7 +4,9 @@ import com.dx.Booker.generator.po.Message;
 
 public class MessagePro extends Message {
     private String userName;
+
     private String userIcon;
+
     private String showDate;
 
     public String getUserName() {

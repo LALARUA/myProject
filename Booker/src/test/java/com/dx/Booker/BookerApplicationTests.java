@@ -9,6 +9,7 @@ import com.dx.Booker.generator.mapper.*;
 
 
 import com.dx.Booker.generator.po.Books;
+import com.dx.Booker.generator.po.DynamicInformation;
 import com.dx.Booker.serviceinterface.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,12 +50,21 @@ public class BookerApplicationTests {
 	@Autowired
 	private CommentMapper commentMapper;
 
+	@Autowired
+	private DynamicInformationMapper dynamicInformationMapper;
+
 
     @Test
 	public void contextLoads() throws Exception{
-		List<commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(171);
-
+		DynamicInformation dynamicIformationById = dynamicInformationMapper.findDynamicIformationById(1);
 		System.out.println("pause");
+//		HashMap<String, Integer> queryCommentData = new HashMap<>();
+//		queryCommentData.put("currentUserId",4);
+//		queryCommentData.put("bookId",171);
+//		List<commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(queryCommentData);
+//
+//		System.out.println("pause");
+
 
 
 //		List<Books> books = booksMapper.selectAllBooks();
