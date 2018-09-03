@@ -520,7 +520,7 @@
                     for(var i=0;i<data.length;i++){
                         $(".bookTitle").eq(i).text(data[i].title)
                         $(".bookAuthor").eq(i).text(data[i].author)
-                        $(".bookAuthor").eq(i).attr("href","/book/findBooks/ByAuthor"+data[i].author)
+                        $(".bookAuthor").eq(i).attr("href","/book/findBooks/ByAuthor"+data[i].author+"/id")
                         $(".bookDetail").eq(i).attr("href","/book/bookDetail/"+data[i].id)
                         $(".bookImage").eq(i).attr("src",data[i].imagepath)
                         $(".bookInCart").eq(i).attr("id",data[i].id)

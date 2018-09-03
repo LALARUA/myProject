@@ -49,7 +49,5 @@ public Cookie AboutUserCookie(Cookie[] cookies,User user){
     cookie.setMaxAge(60 * 60 * 24 * 10);
     cookie.setPath("/");
     return cookie;
-
-
 }
 }

@@ -39,7 +39,6 @@ public class MyExceptionHandler {
      *
      */
     public String UnauthorizedException() {
-
         return "forward:/error";
     }
 }

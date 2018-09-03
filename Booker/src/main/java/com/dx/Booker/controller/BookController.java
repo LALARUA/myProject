@@ -2,6 +2,7 @@ package com.dx.Booker.controller;
 
 import com.dx.Booker.generator.extendPojo.commentAndSupport;
 import com.dx.Booker.generator.extendPojo.findBooks;
+import com.dx.Booker.generator.mytool.MyTool;
 import com.dx.Booker.generator.po.*;
 import com.dx.Booker.serviceinterface.BookService;
 import com.dx.Booker.serviceinterface.CommentSevice;
@@ -44,7 +45,7 @@ public class BookController {
      *
      */
     public String findBooks(@PathVariable("orderBy") String orderBy,@PathVariable("keyWord") String keyWord, Model model, @PathVariable("method") String method, HttpSession httpSession) {
-        List books = new ArrayList();
+        List<Books> books = new ArrayList<Books>();
 
         findBooks findBooks = new findBooks();
         findBooks.setKeyWord(keyWord);
@@ -59,7 +60,11 @@ public class BookController {
         if (user != null)
             collects = userService.myCollect(user.getId());
         model.addAttribute("collects", collects);
-        books = (ArrayList) map.get("books");
+        books = (ArrayList<Books>) map.get("books");
+        for (Books book:books
+             ) {book.setAuthor(MyTool.handleBookAuthor(book.getAuthor()));
+
+        }
         pageNum = (Integer) map.get("pageNum");
         model.addAttribute("books", books);
         model.addAttribute("pageNum", pageNum);

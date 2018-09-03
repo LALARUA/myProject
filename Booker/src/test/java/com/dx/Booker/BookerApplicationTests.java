@@ -56,8 +56,10 @@ public class BookerApplicationTests {
 
     @Test
 	public void contextLoads() throws Exception{
-		DynamicInformation dynamicIformationById = dynamicInformationMapper.findDynamicIformationById(1);
-		System.out.println("pause");
+//		DynamicInformation dynamicInformationById = dynamicInformationMapper.findDynamicIformationById(1);
+//		System.out.println("pause");
+
+
 //		HashMap<String, Integer> queryCommentData = new HashMap<>();
 //		queryCommentData.put("currentUserId",4);
 //		queryCommentData.put("bookId",171);

@@ -318,20 +318,13 @@ public class AdminController {
      */
     public String updateBookImage(Books bookDetail, MultipartFile image, Model model) {
         adminService.updateBookImage(bookDetail, image);
-
         model.addAttribute("bookDetail", bookDetail);
-
         return "adminUpdateBookPage";
     }
 
     @RequestMapping("/updateDynamicInformation")
     public String updateDynamicInformation(DynamicInformations dynamicInformations,
                                            Model model, HttpServletRequest httpServletRequest){
-
-
-
-
-
 
 
 
