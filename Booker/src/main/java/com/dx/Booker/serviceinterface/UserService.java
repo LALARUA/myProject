@@ -15,7 +15,7 @@ import java.util.Map;
 
 public interface UserService {
     public void myCart(Integer userId,Model model);
-   public void updatePassword(User user, HttpSession httpSession, Cookie[] cookies, HttpServletResponse httpServletResponse);
+    public void updatePassword(User user, HttpSession httpSession, Cookie[] cookies, HttpServletResponse httpServletResponse);
     public String insertOrder(order order);
     public List<order> myOrder(Integer userId);
     public void myUser(Model model,Integer userId);
@@ -37,6 +37,7 @@ public interface UserService {
     public void userGetCoupon(Coupon coupon);
     public void registerAdmin(Integer userId);
     public List<Boolean> isGetCoupon(Integer userId);
+    public UserGetOtherUserInformation UserGetOtherUserInformation(Integer userId);
     public void test();
 
 }

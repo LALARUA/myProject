@@ -1,5 +1,6 @@
 package com.dx.Booker.generator.mapper;
 
+import com.dx.Booker.generator.extendPojo.UserGetOtherUserInformation;
 import com.dx.Booker.generator.po.User;
 import com.dx.Booker.generator.po.UserExample;
 import java.util.List;
@@ -17,6 +18,8 @@ public interface UserMapper {
 
     @Update("update user set role = 'admin' where id = #{userId}")
     public void registerAdmin(Integer userId);
+
+    public UserGetOtherUserInformation UserGetOtherUserInformation(Integer userId);
 
     long countByExample(UserExample example);
 

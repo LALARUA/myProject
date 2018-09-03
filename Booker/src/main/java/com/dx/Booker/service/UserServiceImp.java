@@ -415,6 +415,14 @@ public class UserServiceImp implements UserService {
         return booleans;
     }
 
+    @Override
+    public UserGetOtherUserInformation UserGetOtherUserInformation(Integer userId) {
+
+        UserGetOtherUserInformation userGetOtherUserInformation = userMapper.UserGetOtherUserInformation(userId);
+
+        return userGetOtherUserInformation;
+    }
+
 
     @Override
     public void test() {

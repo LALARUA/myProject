@@ -471,4 +471,10 @@ return HashMap;
         return objectObjectHashMap;
     }
 
+    @GetMapping("/userBrowseOtherUserPage/{userId}")
+    public String userBrowseOtherUserPage(@PathVariable("userId") String userId,Model model){
+
+        return null;
+    }
+
 }
