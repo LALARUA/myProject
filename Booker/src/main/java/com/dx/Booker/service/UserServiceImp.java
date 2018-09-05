@@ -64,6 +64,9 @@ public class UserServiceImp implements UserService {
     private promotionMapper promotionMapper;
     @Autowired
     private LabelAndTagMapper labelAndTagMapper;
+
+    @Autowired
+    private CouponMapper couponMapper;
 //
 //
     @Override
@@ -405,21 +408,19 @@ public class UserServiceImp implements UserService {
         ArrayList<Boolean> booleans = new ArrayList<>();
         promotion promotion = new promotion();
         promotion.setUserId(userId);
-        for (int i=1;i<4;i++){
+        Integer couponTypeNum = couponMapper.couponTypeNum();
+        for (int i=1;i<=couponTypeNum;i++){
             promotion.setTypeId(i);
             if (promotionMapper.selectPromotion(promotion)!=null)
                 booleans.add(true);
             else booleans.add(false);
-
         }
         return booleans;
     }
 
     @Override
     public UserGetOtherUserInformation UserGetOtherUserInformation(Integer userId) {
-
         UserGetOtherUserInformation userGetOtherUserInformation = userMapper.UserGetOtherUserInformation(userId);
-
         return userGetOtherUserInformation;
     }
 

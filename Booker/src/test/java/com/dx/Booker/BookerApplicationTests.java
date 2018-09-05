@@ -10,6 +10,7 @@ import com.dx.Booker.generator.mapper.*;
 
 import com.dx.Booker.generator.po.Books;
 import com.dx.Booker.generator.po.DynamicInformation;
+import com.dx.Booker.generator.po.reply;
 import com.dx.Booker.serviceinterface.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,9 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -56,10 +57,17 @@ public class BookerApplicationTests {
 
     @Test
 	public void contextLoads() throws Exception{
+
 //		DynamicInformation dynamicInformationById = dynamicInformationMapper.findDynamicIformationById(1);
 //		System.out.println("pause");
 
+		Date date = new Date();
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String format = simpleDateFormat.format(date);
 
+
+		Date parse = simpleDateFormat.parse(format);
+		System.out.println(parse);
 //		HashMap<String, Integer> queryCommentData = new HashMap<>();
 //		queryCommentData.put("currentUserId",4);
 //		queryCommentData.put("bookId",171);

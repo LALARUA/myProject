@@ -6,14 +6,27 @@ import com.dx.Booker.generator.po.CommentExample;
 
 import java.util.HashMap;
 import java.util.List;
+
+import com.dx.Booker.generator.po.reply;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface CommentMapper {
     @Select("select * from comment where bookId=#{bookId} and userId = #{userId}")
     public Comment userCommentInBook(Comment comment);
 
+    @Insert("INSERT INTO reply (commentId,fromUserId,toUserId,detail,datetime) VALUES(#{commentId},#{fromUserId},#{toUserId},#{detail},#{datetime})")
+    public void insertReply(reply reply);
+
+    @Insert("INSERT INTO replySupport (userId,replyId) VALUES(#{userId},#{replyId})")
+    public void supportReply(@Param("userId") Integer userId,@Param("replyId") Integer replyId);
+
+
     List<commentAndSupport> commentsOfBook(HashMap hashMap);
+
+
 
 
     long countByExample(CommentExample example);

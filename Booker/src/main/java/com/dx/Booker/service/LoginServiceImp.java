@@ -347,9 +347,9 @@ public class LoginServiceImp implements LoginService {
                 }
                 User userInDB = isRegister(user.getEmail());
                 httpSession.setAttribute("user", userInDB);
-                httpSession.setMaxInactiveInterval(30 * 60);
+                httpSession.setMaxInactiveInterval(60 * 60);
                 Cookie cookie1 = new Cookie("JSESSIONID", httpSession.getId());
-                cookie1.setMaxAge(30 * 60);
+                cookie1.setMaxAge(60 * 60);
                 cookie1.setPath("/");
                 httpServletResponse.addCookie(cookie1);
 

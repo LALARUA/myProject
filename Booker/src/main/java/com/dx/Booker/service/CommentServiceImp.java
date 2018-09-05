@@ -6,17 +6,16 @@ import com.dx.Booker.generator.mapper.CommentMapper;
 import com.dx.Booker.generator.mapper.MessageMapper;
 import com.dx.Booker.generator.mapper.SupportMapper;
 import com.dx.Booker.generator.mapper.UserMapper;
-import com.dx.Booker.generator.po.Comment;
-import com.dx.Booker.generator.po.Message;
-import com.dx.Booker.generator.po.Support;
-import com.dx.Booker.generator.po.User;
+import com.dx.Booker.generator.po.*;
 import com.dx.Booker.serviceinterface.CommentSevice;
 import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +86,7 @@ public class CommentServiceImp implements CommentSevice {
     public List<commentAndSupport> selectCommentAndSupport(Integer bookId,Integer userId) {
         HashMap<String, Integer> hs = new HashMap<>();
         hs.put("bookId",bookId);
-        hs.put("currentUser",userId);
+        hs.put("currentUserId",userId);
         List<com.dx.Booker.generator.extendPojo.commentAndSupport> commentAndSupports = commentMapper.commentsOfBook(hs);
         for (commentAndSupport commentAndSupport:commentAndSupports
              ) {commentAndSupport.setUserBrowseId(userId);
@@ -100,7 +99,15 @@ public class CommentServiceImp implements CommentSevice {
             else commentAndSupport.setIfUserSupport(true);
             Integer commentId = commentAndSupport.getId();
             commentAndSupport.setCommentSupports(supportMapper.commentSupports(commentId));
+            ArrayList<reply> replies = commentAndSupport.getReplies();
+            if (replies.size()==1&&replies.get(0).getId()==null)
+                commentAndSupport.setReplies(null);
+            else
+            for (reply reply:commentAndSupport.getReplies()) {
+                reply.setShowDateTime(simpleDateFormat.format(reply.getDatetime()));
             }
+            }
+
     return commentAndSupports;
     }
 
@@ -108,6 +115,12 @@ public class CommentServiceImp implements CommentSevice {
         Comment comment1 = commentMapper.userCommentInBook(comment);
         return comment1;
 
+    }
+
+    @Override
+    public void supportReply(Integer userId, Integer replyId) {
+
+        commentMapper.supportReply(userId,replyId);
     }
 
 }

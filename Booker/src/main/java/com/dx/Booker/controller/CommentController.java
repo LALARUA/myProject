@@ -6,6 +6,7 @@ import com.dx.Booker.generator.mapper.SupportMapper;
 import com.dx.Booker.generator.po.Comment;
 import com.dx.Booker.generator.po.Support;
 import com.dx.Booker.serviceinterface.CommentSevice;
+import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,8 +56,20 @@ public class CommentController {
      */
     public Map supportComment(supportMessage supportMessage){
         HashMap<Object, Object> data = new HashMap<>();
-        commentSevice.addSupport(supportMessage);
+        try {
+            commentSevice.addSupport(supportMessage);
+        }catch (Exception e){
+            data.put("error","点赞失败");
+        }
         return data;
+    }
+
+    @ResponseBody
+    @RequestMapping("/supportReply")
+    public String supportReply(Integer userId,Integer replyId){
+
+        commentSevice.supportReply(userId,replyId);
+        return null;
     }
 
 }

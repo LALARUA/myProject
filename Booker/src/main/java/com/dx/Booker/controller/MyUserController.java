@@ -454,7 +454,7 @@ return HashMap;
         String rel = String.valueOf(httpSession.getAttribute("verification"));
         String info = null;
         HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
-        if (verification.equals(rel)||verification.equals("9999")) {
+        if (verification.equals(rel)) {
 
             Cookie[] cookies = httpServletRequest.getCookies();
 

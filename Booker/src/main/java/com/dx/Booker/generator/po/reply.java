@@ -13,6 +13,15 @@ public class reply {
     private String toUserName;
     private Integer support;
     private Integer currentUserIsSupport;
+    private String showDateTime;
+
+    public String getShowDateTime() {
+        return showDateTime;
+    }
+
+    public void setShowDateTime(String showDateTime) {
+        this.showDateTime = showDateTime;
+    }
 
     public Integer getSupport() {
         return support;
