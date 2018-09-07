@@ -39,7 +39,7 @@
                         <button class="btn btn-sm btn-outline-secondary">Share</button>
                         <button class="btn btn-sm btn-outline-secondary">Export</button>
                     </div>
-                    <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+                    <a th:if="${session.user!=null}" th:href="@{/user/myCart}" id="cart" class="btn btn-light">
                         <span data-feather="calendar"></span>
                         购物车
                     </a>
@@ -167,32 +167,39 @@
                         </div>
                     </div>
                     <hr>
-                    <div th:if="${commentAndSupport.replies!=null}" style="margin-left: 100px">
-                        <div style="clear: both" th:id="collapseExample+${commentAndSupportStat.index}">
-                            <div style="width: 500px" th:class="'replies'+${commentAndSupportStat.index}" th:each="i : ${#numbers.sequence(0,1)}">
+                    <div  th:if="${commentAndSupport.replies!=null}" style="margin-left: 100px">
+                        <div class="replies" th:replyNum="${commentAndSupport.replyNumber}" th:nowReplyNum="${commentAndSupport.replyNumber<2?commentAndSupport.replyNumber:2}" style="clear: both" th:id="collapseExample+${commentAndSupportStat.index}">
+                            <div style="width: 500px"  th:each="i : ${#numbers.sequence(0,1)}">
                                 <h6 class="mb-1"><span style="font-weight: bold" ><a style="color: black" th:href="@{#}" ><span data-feather="user">
                                 </span>[[${commentAndSupport.replies[i].fromUserName}]]</a><span th:if="${commentAndSupport.replies[i].fromUserId==commentAndSupport.getUserId()}">(评论者)</span>-></span><a style="color: black" th:href="@{#}" ><span data-feather="user">
                                 </span>[[${commentAndSupport.replies[i].toUserName}]]</a><span  th:if="${commentAndSupport.replies[i].toUserId==commentAndSupport.getUserId()}">(评论者)</span></h6>
                                 <h5 th:text="${commentAndSupport.replies[i].detail}"></h5>
-                                <button  th:replyId="${commentAndSupport.replies[i].id}" th:disabled="${commentAndSupport.replies[i].getCurrentUserIsSupport()==0}?'false':'true'"
+                                <button  th:replyId="${commentAndSupport.replies[i].getId()}" th:disabled="${commentAndSupport.replies[i].getCurrentUserIsSupport()==0}?'false':'true'"
                                          th:class="${commentAndSupport.replies[i].getCurrentUserIsSupport()==0}?'supportReply btn btn-sm btn-light':'supportReply btn btn-sm btn-danger support'">
-                                    <span data-feather="thumbs-up" ></span><span th:text="${commentAndSupport.replies[i].support}" class="supportReply replySupportNumber">点赞数</span>
+                                    <span data-feather="thumbs-up" ></span><span th:text="${commentAndSupport.replies[i].support}" class="replySupportNumber">点赞数</span>
                                 </button>
                                 &nbsp;
-                                <button th:replyId="${commentAndSupport.replies[i].id}" class="replyMessage btn btn-sm btn-light">
+                                <button data-toggle="collapse" th:href="@{#collapseExample}+${commentAndSupport.replies[i].id}" th:replyId="${commentAndSupport.replies[i].id}" class="replyMessage btn btn-sm btn-light">
                                     <span data-feather="message-circle" ></span>
                                 </button>
                                 &nbsp;
                                 <br>
                                 <span th:text="${commentAndSupport.replies[i].showDateTime}"></span>
 
+                                <div class="collapse" th:id="collapseExample+${commentAndSupport.replies[i].id}">
+
+                                        <textarea th:id="repltMessageDetail+${commentAndSupport.replies[i].id}"   placeholder="回复信息" style="resize:none;height: 100px;float: left" class="form-control"name="detail"  aria-label="With textarea" required></textarea>
+                                        <input th:id="replyMessageFromUserId+${commentAndSupport.replies[i].id}"+ type="hidden" th:value="${commentAndSupport.replies[i].fromUserId}" name="fromUserId">
+                                        <input th:id="replyMessageCommentId+${commentAndSupport.replies[i].id}" type="hidden" th:value="${commentAndSupport.getUserId()}" name="commentId">
+                                        <button th:replyId="${commentAndSupport.replies[i].id}"  class="replyMessageButton btn btn-sm btn-light" style="margin-left: 450px" type="submit">提交</button>
+
+                                </div>
+
 
                                 <hr>
                             </div>
-
-                            <button class="loadMoreReply" th:index="${commentAndSupportStat.index}">加载更多</button>
-
                         </div>
+                        <button class="loadMoreReply" th:index="${commentAndSupportStat.index}">加载更多</button>
                     </div>
 
 
@@ -214,11 +221,63 @@
         var userName = $("#userName").val()
         $(document).on('click', '.loadMoreReply', function (){
             var index = $(this).attr("index");
-            $(".replies").eq(index).append("sfafaf")
+            $.ajax({
+                url: '/comment/replyMessage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                    detail:detail,
+                    toUserId:fromUserId,
+                    commentId:commentId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+
+                    alert("success")
+
+
+                },
+            })
+
+            $(".replies").eq(index).append("<span>hello world</span>")
+
+
+        })
+
+        $(document).on('click', '.replyMessageButton', function (){
+            var replyId = $(this).attr("replyId");
+            var detail = $("#repltMessageDetail"+replyId).val()
+            if (detail.length<6){
+                alert("请输入长度不少于6的字符");
+                return false;
+            }
+            var fromUserId = $("#replyMessageFromUserId"+replyId).val()
+            var commentId = $("#replyMessageCommentId"+replyId).val()
+            $.ajax({
+                url: '/comment/replyMessage',
+                type: 'POST', //
+                async: true,    //或false,是否异步
+                data: {
+                   detail:detail,
+                    toUserId:fromUserId,
+                    commentId:commentId,
+                },
+                timeout: 5000,    //超时时间
+                dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                success: function (data) {
+
+                    alert("success")
+
+
+                },
+            })
 
         })
         $(document).on('click', '.supportReply', function (){
             var replyId = $(this).attr("replyId");
+            var button = $(this);
+           var replySupportNumberEl=$(this).children(".replySupportNumber");
             $.ajax({
                 url: '/comment/supportReply',
                 type: 'POST', //
@@ -230,6 +289,14 @@
                 timeout: 5000,    //超时时间
                 dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
                 success: function (data) {
+                    if (data['error']=="操作失败")
+                        alert(data['error'])
+                    else {
+                        replySupportNumberEl.text(parseInt(replySupportNumberEl.text())+1);
+                        button.attr("class","supportReply btn btn-sm btn-danger support");
+                        button.attr("disabled","false");
+                    }
+
 
 
                 },
@@ -349,8 +416,8 @@
             var commentId = $(this).attr("commentId")
             var commentUserId = $(".commentUserId")
             var bookTitle = $("#bookTitle").text();
-            $(this).attr("disabled","false");
-            $(this).attr("class","btn btn-danger support");
+            var button = $(this);
+
             var index = $(this).attr("index")
             var commentUserId = $(".commentUserId").eq(index).val();
             var support=parseInt($(".supportNumber").eq(index).text())+1
@@ -358,7 +425,7 @@
             {
                 $("#myComment").text(support)
             }
-            $(".supportNumber").eq(index).text(support)
+
             $.ajax({
                 url: '/comment/supportComment',
                 type: 'POST', //
@@ -377,6 +444,11 @@
                 success: function (data) {
                     if (data['error']!=null)
                         alert(data['error'])
+                    else {
+                        button.attr("disabled","false");
+                        button.attr("class","btn btn-danger support");
+                        $(".supportNumber").eq(index).text(support)
+                    }
 
                 },
             })

@@ -55,7 +55,11 @@ FROM
 LEFT JOIN `user` ON `comment`.userId = `user`.id
 LEFT JOIN reply ON `comment`.id = reply.commentId
 WHERE
-	`comment`.bookId = #{bookId} ORDER BY reply.datetime
+	`comment`.bookId = #{bookId} ORDER BY date,reply.datetime
+
+  </select>
+  <select id="replies">
+
 
   </select>
   <!--<resultMap id="commentsOfBook" type="com.dx.Booker.generator.extendPojo.commentAndSupport">-->

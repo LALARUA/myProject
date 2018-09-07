@@ -5,6 +5,8 @@ import com.dx.Booker.generator.extendPojo.supportMessage;
 import com.dx.Booker.generator.mapper.SupportMapper;
 import com.dx.Booker.generator.po.Comment;
 import com.dx.Booker.generator.po.Support;
+import com.dx.Booker.generator.po.User;
+import com.dx.Booker.generator.po.reply;
 import com.dx.Booker.serviceinterface.CommentSevice;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,10 +70,30 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping("/supportReply")
-    public String supportReply(Integer userId,Integer replyId){
+    public HashMap supportReply(Integer userId,Integer replyId){
+        HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+        try {
+            commentSevice.supportReply(userId,replyId);
+        } catch (Exception e) {
+            objectObjectHashMap.put("error","操作失败");
+        }
+        return objectObjectHashMap;
+    }
 
-        commentSevice.supportReply(userId,replyId);
-        return null;
+    @ResponseBody
+    @RequestMapping("/replyMessage")
+    public HashMap replyMessage(HttpSession httpSession, reply reply){
+
+        HashMap<String, String> info = new HashMap<>();
+        reply.setDatetime(new Date());
+        User user = (User)httpSession.getAttribute("user");
+        reply.setFromUserId(user.getId());
+        try {
+            commentSevice.insertReply(reply);
+        } catch (Exception e) {
+            info.put("error","操作失败");
+        }
+        return info;
     }
 
 }

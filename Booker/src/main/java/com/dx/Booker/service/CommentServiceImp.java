@@ -123,4 +123,10 @@ public class CommentServiceImp implements CommentSevice {
         commentMapper.supportReply(userId,replyId);
     }
 
+    @Override
+    public void insertReply(reply reply) {
+
+        commentMapper.insertReply(reply);
+    }
+
 }

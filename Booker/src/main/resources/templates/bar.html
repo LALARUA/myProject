@@ -61,7 +61,7 @@
             <!--<button type="button" class="btn btn-outline-light">Light</button>-->
             <!--<button type="button" class="btn btn-outline-dark">Dark</button>-->
         </div>
-        <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+        <a th:if="${session.user!=null}" th:href="@{/user/myCart}" id="cart" class="btn btn-light">
             <span data-feather="calendar"></span>
             购物车
         </a>
@@ -84,7 +84,7 @@
             <!--<button type="button" class="btn btn-outline-light">Light</button>-->
             <!--<button type="button" class="btn btn-outline-dark">Dark</button>-->
         </div>
-        <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+        <a th:if="${session.user!=null}" th:href="@{/user/myCart}" id="cart" class="btn btn-light">
             <span data-feather="calendar"></span>
             购物车
         </a>

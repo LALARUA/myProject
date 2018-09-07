@@ -361,7 +361,7 @@ public class MyUserController {
         return data;
 
     }
-    @GetMapping("/myCart/{userId}")
+    @GetMapping("/myCart")
     /**
      * @description 个人购物车
      * @author xiangXX
@@ -372,11 +372,13 @@ public class MyUserController {
      * @param model
      *
      */
-    public String myCart(@PathVariable("userId") Integer id,HttpServletRequest httpServletRequest,HttpSession httpSession, Model model){
-        String referer = httpServletRequest.getHeader("referer");
-        if (referer == null)
-            return "XX";
+    public String myCart(HttpServletRequest httpServletRequest,HttpSession httpSession, Model model){
+//        String referer = httpServletRequest.getHeader("referer");
+//        if (referer == null)
+//            return "XX";
 
+        User user = (User)httpSession.getAttribute("user");
+        Integer id = user.getId();
         try {
             userService.myCart(id,model);
 

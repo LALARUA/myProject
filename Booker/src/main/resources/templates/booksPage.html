@@ -45,7 +45,7 @@
                         <button class="btn btn-sm btn-outline-secondary">Share</button>
                         <button class="btn btn-sm btn-outline-secondary">Export</button>
                     </div>
-                    <a th:if="${session.user!=null}" th:href="@{/user/myCart/}+${session.user.id}" id="cart" class="btn btn-light">
+                    <a th:if="${session.user!=null}" th:href="@{/user/myCart}" id="cart" class="btn btn-light">
                         <span data-feather="calendar"></span>
                         购物车
                     </a>

@@ -24,6 +24,10 @@ public interface CommentMapper {
     public void supportReply(@Param("userId") Integer userId,@Param("replyId") Integer replyId);
 
 
+    public List<reply> replies(Integer commentId);
+
+
+
     List<commentAndSupport> commentsOfBook(HashMap hashMap);
 
 

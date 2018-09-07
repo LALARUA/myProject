@@ -15,5 +15,6 @@ public interface CommentSevice {
   public List<commentAndSupport> selectCommentAndSupport(Integer bookId, Integer userId);
   public Comment selectCommentByUserIdAndBookId(Comment comment);
   public void supportReply(Integer userId,Integer replyId);
+  public void insertReply(reply reply);
 
 }
