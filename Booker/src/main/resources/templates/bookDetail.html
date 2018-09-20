@@ -168,30 +168,33 @@
                     </div>
                     <hr>
                     <div  th:if="${commentAndSupport.replies!=null}" style="margin-left: 100px">
-                        <div class="replies" th:replyNum="${commentAndSupport.replyNumber}" th:nowReplyNum="${commentAndSupport.replyNumber<2?commentAndSupport.replyNumber:2}" style="clear: both" th:id="collapseExample+${commentAndSupportStat.index}">
-                            <div style="width: 500px"  th:each="i : ${#numbers.sequence(0,1)}">
+                        <div class="replies"  style="clear: both" th:id="collapseExample+${commentAndSupportStat.index}">
+                            <div style="width: 500px" th:each="reply,replyStat:${commentAndSupport.replies}">
+                                 <!--th:each="i : ${#numbers.sequence(0,1)}"-->
+
+
                                 <h6 class="mb-1"><span style="font-weight: bold" ><a style="color: black" th:href="@{#}" ><span data-feather="user">
-                                </span>[[${commentAndSupport.replies[i].fromUserName}]]</a><span th:if="${commentAndSupport.replies[i].fromUserId==commentAndSupport.getUserId()}">(评论者)</span>-></span><a style="color: black" th:href="@{#}" ><span data-feather="user">
-                                </span>[[${commentAndSupport.replies[i].toUserName}]]</a><span  th:if="${commentAndSupport.replies[i].toUserId==commentAndSupport.getUserId()}">(评论者)</span></h6>
-                                <h5 th:text="${commentAndSupport.replies[i].detail}"></h5>
-                                <button  th:replyId="${commentAndSupport.replies[i].getId()}" th:disabled="${commentAndSupport.replies[i].getCurrentUserIsSupport()==0}?'false':'true'"
-                                         th:class="${commentAndSupport.replies[i].getCurrentUserIsSupport()==0}?'supportReply btn btn-sm btn-light':'supportReply btn btn-sm btn-danger support'">
-                                    <span data-feather="thumbs-up" ></span><span th:text="${commentAndSupport.replies[i].support}" class="replySupportNumber">点赞数</span>
+                                </span>[[${reply.fromUserName}]]</a><span th:if="${reply.fromUserId==commentAndSupport.getUserId()}">(评论者)</span>-></span><a style="color: black" th:href="@{#}" ><span data-feather="user">
+                                </span>[[${reply.toUserName}]]</a><span  th:if="${reply.toUserId==commentAndSupport.getUserId()}">(评论者)</span></h6>
+                                <h5 th:text="${reply.detail}"></h5>
+                                <button  th:replyId="${reply.getId()}" th:disabled="${reply.getCurrentUserIsSupport()==0}?'false':'true'"
+                                         th:class="${reply.getCurrentUserIsSupport()==0}?'supportReply btn btn-sm btn-light':'supportReply btn btn-sm btn-danger support'">
+                                    <span data-feather="thumbs-up" ></span><span th:text="${reply.support}" class="replySupportNumber">点赞数</span>
                                 </button>
                                 &nbsp;
-                                <button data-toggle="collapse" th:href="@{#collapseExample}+${commentAndSupport.replies[i].id}" th:replyId="${commentAndSupport.replies[i].id}" class="replyMessage btn btn-sm btn-light">
+                                <button data-toggle="collapse" th:href="@{#collapseExample}+${reply.id}" th:replyId="${reply.id}" class="replyMessage btn btn-sm btn-light">
                                     <span data-feather="message-circle" ></span>
                                 </button>
                                 &nbsp;
                                 <br>
-                                <span th:text="${commentAndSupport.replies[i].showDateTime}"></span>
+                                <span th:text="${reply.showDateTime}"></span>
 
-                                <div class="collapse" th:id="collapseExample+${commentAndSupport.replies[i].id}">
+                                <div class="collapse" th:id="collapseExample+${reply.id}">
 
-                                        <textarea th:id="repltMessageDetail+${commentAndSupport.replies[i].id}"   placeholder="回复信息" style="resize:none;height: 100px;float: left" class="form-control"name="detail"  aria-label="With textarea" required></textarea>
-                                        <input th:id="replyMessageFromUserId+${commentAndSupport.replies[i].id}"+ type="hidden" th:value="${commentAndSupport.replies[i].fromUserId}" name="fromUserId">
-                                        <input th:id="replyMessageCommentId+${commentAndSupport.replies[i].id}" type="hidden" th:value="${commentAndSupport.getUserId()}" name="commentId">
-                                        <button th:replyId="${commentAndSupport.replies[i].id}"  class="replyMessageButton btn btn-sm btn-light" style="margin-left: 450px" type="submit">提交</button>
+                                        <textarea th:id="repltMessageDetail+${reply.id}"   placeholder="回复信息" style="resize:none;height: 100px;float: left" class="form-control"name="detail"  aria-label="With textarea" required></textarea>
+                                        <input th:id="replyMessageFromUserId+${reply.id}"+ type="hidden" th:value="${reply.fromUserId}" name="fromUserId">
+                                        <input th:id="replyMessageCommentId+${reply.id}" type="hidden" th:value="${commentAndSupport.getUserId()}" name="commentId">
+                                        <button th:replyId="${reply.id}"  class="replyMessageButton btn btn-sm btn-light" style="margin-left: 450px" type="submit">提交</button>
 
                                 </div>
 
@@ -199,7 +202,7 @@
                                 <hr>
                             </div>
                         </div>
-                        <button class="loadMoreReply" th:index="${commentAndSupportStat.index}">加载更多</button>
+                        <!--<button class="loadMoreReply" th:index="${commentAndSupportStat.index}">加载更多</button>-->
                     </div>
 
 
